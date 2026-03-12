@@ -1,0 +1,97 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Documentos{% endblock %}
+
+{% block banner_title %}Documentos de Clientes{% endblock %}
+{% block banner_text %}Archivos enviados por los clientes asignados{% endblock %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+{% if documentos %}
+
+<div class="table-responsive">
+
+<table class="table table-hover align-middle">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Documento</th>
+<th>Fecha</th>
+<th>Acción</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for doc, cliente in documentos %}
+
+<tr>
+
+<td>{{ doc.id }}</td>
+
+<td>
+<i class="bi bi-person-circle me-2"></i>
+{{ cliente.usuario.nombre }}
+</td>
+
+<td>
+
+{% if doc.nombre_archivo.endswith('.pdf') %}
+<i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+{% elif doc.nombre_archivo.endswith('.doc') or doc.nombre_archivo.endswith('.docx') %}
+<i class="bi bi-file-earmark-word text-primary me-2"></i>
+{% elif doc.nombre_archivo.endswith('.jpg') or doc.nombre_archivo.endswith('.png') %}
+<i class="bi bi-file-earmark-image text-success me-2"></i>
+{% else %}
+<i class="bi bi-file-earmark text-secondary me-2"></i>
+{% endif %}
+
+{{ doc.nombre_archivo }}
+
+</td>
+
+<td>
+<i class="bi bi-calendar3 me-1"></i>
+{{ doc.fecha_subida.strftime('%d/%m/%Y') }}
+</td>
+
+<td>
+
+<a href="{{ url_for('abogado.descargar_documento', documento_id=doc.id) }}"
+class="btn btn-sm btn-success">
+
+<i class="bi bi-download"></i>
+Descargar
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info text-center">
+<i class="bi bi-info-circle"></i>
+No hay documentos disponibles.
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

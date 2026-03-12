@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="text-center fw-bold">Áreas de Práctica</h2>
+
+<p class="text-center text-muted">
+Nuestros abogados están especializados en diferentes ramas del derecho.
+</p>
+
+<div class="row mt-4">
+
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<a href="{{ url_for('derecho_penal') }}">
+
+<img src="{{ url_for('static', filename='img/derecho_penal.avif') }}" class="card-img-top">
+
+</a>
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Penal</h5>
+
+<p class="card-text">
+Defensa y asesoría legal en procesos penales.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<a href="{{ url_for('derecho_civil') }}">
+
+<img src="{{ url_for('static', filename='img/derecho_civil.avif') }}" class="card-img-top">
+
+</a>
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Civil</h5>
+
+<p class="card-text">
+Asesoría legal en contratos y conflictos civiles.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<a href="{{ url_for('derecho_ambiental') }}">
+
+<img src="{{ url_for('static', filename='img/derecho_ambiental.avif') }}" class="card-img-top">
+
+</a>
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Ambiental</h5>
+
+<p class="card-text">
+Asesoría legal en normativas ambientales.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

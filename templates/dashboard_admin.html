@@ -1,0 +1,113 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard Admin{% endblock %}
+{% block banner_title %}Panel Administrativo{% endblock %}
+{% block banner_text %}Gestión general del sistema Veza Abogados{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card text-white bg-primary shadow text-center p-3">
+            <h5>Total Usuarios</h5>
+            <h2>{{ total_usuarios }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-info shadow text-center p-3">
+            <h5>Total Clientes</h5>
+            <h2>{{ total_clientes }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-dark shadow text-center p-3">
+            <h5>Total Abogados</h5>
+            <h2>{{ total_abogados }}</h2>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row g-4 mt-1">
+
+    <div class="col-md-6">
+        <div class="card text-white bg-warning shadow text-center p-3">
+            <h5>Total Consultas</h5>
+            <h2>{{ total_consultas }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-success shadow text-center p-3">
+            <h5>Activos</h5>
+            <h2>{{ activos }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-white bg-danger shadow text-center p-3">
+            <h5>Inactivos</h5>
+            <h2>{{ inactivos }}</h2>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- GRÁFICO -->
+
+<div class="row mt-5">
+
+    <div class="col-md-10 offset-md-1">
+
+        <div class="card shadow p-4">
+
+            <h4 class="text-center mb-4">Estado de Consultas</h4>
+
+            <canvas id="consultasChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('consultasChart');
+
+const pendientes = {{ pendientes | tojson }};
+const respondidas = {{ respondidas | tojson }};
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Pendientes', 'Respondidas'],
+        datasets: [{
+            label: 'Consultas',
+            data: [pendientes, respondidas],
+            backgroundColor: ['#f59e0b', '#22c55e']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+</script>
+
+{% endblock %}

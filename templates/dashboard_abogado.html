@@ -1,0 +1,41 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard Abogado{% endblock %}
+
+{% block banner_title %}Panel de Abogado{% endblock %}
+{% block banner_text %}Gestiona las consultas y documentos de tus clientes{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow">
+            <div class="card-body text-center">
+                <h5>Total Consultas</h5>
+                <h3>{{ total_consultas }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 shadow">
+            <div class="card-body text-center">
+                <h5>Pendientes</h5>
+                <h3>{{ pendientes }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow">
+            <div class="card-body text-center">
+                <h5>Respondidas</h5>
+                <h3>{{ respondidas }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

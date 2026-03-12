@@ -1,0 +1,100 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard Cliente{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<h2 class="mb-4 text-center fw-bold">Panel del Cliente</h2>
+
+<div class="row g-4">
+
+    <!-- TOTAL CONSULTAS -->
+    <div class="col-md-3">
+        <div class="card text-white bg-primary shadow h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Consultas</h5>
+                <h2 class="fw-bold">{{ total_consultas }}</h2>
+                <p class="mb-0">Consultas realizadas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PENDIENTES -->
+    <div class="col-md-3">
+        <div class="card text-white bg-warning shadow h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Pendientes</h5>
+                <h2 class="fw-bold">{{ pendientes }}</h2>
+                <p class="mb-0">En espera de respuesta</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESPONDIDAS -->
+    <div class="col-md-3">
+        <div class="card text-white bg-success shadow h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Respondidas</h5>
+                <h2 class="fw-bold">{{ respondidas }}</h2>
+                <p class="mb-0">Consultas atendidas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div class="col-md-3">
+        <div class="card text-white bg-dark shadow h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Documentos</h5>
+                <h2 class="fw-bold">{{ total_documentos }}</h2>
+                <p class="mb-0">Archivos disponibles</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ACCIONES RAPIDAS -->
+
+<div class="row mt-5 g-4">
+
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body text-center">
+                <h4>Nueva Consulta</h4>
+                <p>
+                    Envía una nueva consulta legal a nuestros abogados.
+                </p>
+
+                <a href="{{ url_for('consultas.nueva_consulta') }}" class="btn btn-primary">
+                    Crear Consulta
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body text-center">
+                <h4>Mis Documentos</h4>
+                <p>
+                    Accede a los documentos relacionados con tus consultas.
+                </p>
+
+                <a href="{{ url_for('documentos.subir_documento') }}" class="btn btn-success">
+                    Ver Documentos
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

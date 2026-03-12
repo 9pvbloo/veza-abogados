@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mb-5">
+
+    <div class="page-header">
+        <h1 class="fw-bold">Derecho Penal</h1>
+        <p class="lead mb-0">
+            Defensa legal especializada y asesoría en procesos penales.
+        </p>
+    </div>
+
+    <div class="row mt-5 g-4 align-items-center">
+
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='img/derecho_penal.avif') }}" class="img-fluid rounded shadow">
+        </div>
+
+        <div class="col-md-6">
+            <div class="section-box">
+                <h3 class="fw-bold">¿Qué ofrecemos?</h3>
+                <p>
+                    Brindamos asesoría y defensa en investigaciones y procesos penales,
+                    protegiendo los derechos de nuestros clientes con responsabilidad,
+                    estrategia jurídica y confidencialidad.
+                </p>
+
+                <ul>
+                    <li>Defensa en procesos penales</li>
+                    <li>Asesoría preventiva</li>
+                    <li>Patrocinio legal en denuncias</li>
+                    <li>Seguimiento de casos</li>
+                </ul>
+
+                <a href="{{ url_for('contacto') }}" class="btn btn-primary mt-3">Solicitar asesoría</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Asignar Cliente{% endblock %}
+
+{% block banner_title %}Asignar Cliente a Abogado{% endblock %}
+{% block banner_text %}Relacionar clientes con abogados del sistema{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+<div class="card shadow p-4">
+
+<h4 class="mb-4 text-center">Asignación de Cliente</h4>
+
+<form method="POST">
+
+<div class="mb-3">
+<label class="form-label">Cliente</label>
+
+<select name="cliente_id" class="form-select" required>
+
+{% for cliente in clientes %}
+
+<option value="{{ cliente.id }}">
+Cliente {{ cliente.usuario.nombre }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+
+<div class="mb-3">
+<label class="form-label">Abogado</label>
+
+<select name="abogado_id" class="form-select" required>
+
+{% for abogado in abogados %}
+
+<option value="{{ abogado.id }}">
+Abogado {{ abogado.usuario.nombre }} - {{ abogado.especialidad }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+
+<button type="submit" class="btn btn-primary w-100">
+Asignar Cliente
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card shadow p-4 mt-4">
+
+<h5 class="mb-3">Asignaciones actuales</h5>
+
+{% if asignaciones %}
+
+<table class="table table-striped">
+
+<thead class="table-dark">
+
+<tr>
+<th>Cliente</th>
+<th>Abogado</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for asignacion in asignaciones %}
+
+<tr>
+
+<td>{{ asignacion.cliente.usuario.nombre }}</td>
+
+<td>{{ asignacion.abogado.usuario.nombre }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<p>No hay asignaciones registradas.</p>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

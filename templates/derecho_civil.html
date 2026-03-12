@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mb-5">
+
+    <div class="page-header">
+        <h1 class="fw-bold">Derecho Civil</h1>
+        <p class="lead mb-0">
+            Soluciones jurídicas en contratos, obligaciones y conflictos civiles.
+        </p>
+    </div>
+
+    <div class="row mt-5 g-4 align-items-center">
+
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='img/derecho_civil.avif') }}" class="img-fluid rounded shadow">
+        </div>
+
+        <div class="col-md-6">
+            <div class="section-box">
+                <h3 class="fw-bold">¿Qué ofrecemos?</h3>
+                <p>
+                    Atendemos conflictos relacionados con contratos, indemnizaciones,
+                    obligaciones, propiedad y otros asuntos del ámbito civil,
+                    ofreciendo soluciones claras y eficientes.
+                </p>
+
+                <ul>
+                    <li>Redacción y revisión de contratos</li>
+                    <li>Asesoría en responsabilidad civil</li>
+                    <li>Conflictos patrimoniales</li>
+                    <li>Representación en procesos civiles</li>
+                </ul>
+
+                <a href="{{ url_for('contacto') }}" class="btn btn-primary mt-3">Solicitar asesoría</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<title>{% block title %}{% endblock %}</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+body{
+background:#f5f6fa;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:260px;
+height:100vh;
+background:#0f172a;
+padding:25px 15px;
+position:fixed;
+left:0;
+top:0;
+}
+
+.sidebar h4{
+color:white;
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+gap:10px;
+
+color:white;
+padding:12px 15px;
+margin-bottom:10px;
+background:#1e293b;
+text-decoration:none;
+border-radius:8px;
+
+transition:all 0.2s ease;
+}
+
+.sidebar a:hover{
+background:#334155;
+transform:translateX(4px);
+}
+
+.sidebar a:hover{
+background:#334155;
+}
+
+.sidebar .logout{
+background:#dc2626;
+}
+
+/* CONTENIDO */
+
+.main-content{
+margin-left:260px;
+padding:40px;
+}
+
+/* BANNER */
+
+.banner-dashboard{
+background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+url("{{ url_for('static', filename='img/banner_veza.jpg') }}");
+
+background-size:cover;
+background-position:center;
+
+color:white;
+padding:70px 20px;
+border-radius:12px;
+text-align:center;
+margin-bottom:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h4>Veza Abogados</h4>
+
+<div class="text-center text-white mb-4">
+
+<i class="bi bi-person-circle" style="font-size:40px;"></i>
+
+<p class="mt-2 mb-0">
+<strong>{{ current_user.nombre }}</strong>
+</p>
+
+<small class="text-light">
+{{ current_user.rol|capitalize }}
+</small>
+
+<hr class="bg-light">
+
+</div>
+
+<a href="{{ url_for('dashboard') }}">
+<i class="bi bi-speedometer2"></i> Dashboard
+</a>
+
+{% if current_user.rol == "cliente" %}
+
+<a href="{{ url_for('consultas.nueva_consulta') }}">
+<i class="bi bi-chat-left-text"></i> Nueva Consulta
+</a>
+
+<a href="{{ url_for('consultas.mis_consultas') }}">
+<i class="bi bi-folder2-open"></i> Mis Consultas
+</a>
+
+<a href="{{ url_for('documentos.subir_documento') }}">
+<i class="bi bi-upload"></i> Subir Documento
+</a>
+
+{% endif %}
+
+
+{% if current_user.rol == "abogado" %}
+
+<a href="{{ url_for('abogado.mis_consultas') }}">
+<i class="bi bi-journal-text"></i> Consultas Asignadas
+
+{% if pendientes is defined %}
+<span class="badge bg-warning text-dark ms-2">{{ pendientes }}</span>
+{% endif %}
+</a>
+
+<a href="{{ url_for('abogado.mis_documentos') }}">
+<i class="bi bi-file-earmark-text"></i> Documentos
+</a>
+
+{% endif %}
+
+
+{% if current_user.rol == "admin" %}
+
+<a href="{{ url_for('admin.crear_abogado') }}">
+<i class="bi bi-person-plus"></i> Crear Abogado
+</a>
+
+<a href="{{ url_for('admin.asignar_cliente') }}">
+<i class="bi bi-diagram-3"></i> Asignar Cliente
+</a>
+
+<a href="{{ url_for('admin.listar_usuarios') }}">
+<i class="bi bi-people"></i> Usuarios
+</a>
+
+<a href="{{ url_for('admin.reporte_pdf') }}">
+<i class="bi bi-file-earmark-pdf"></i> Reporte PDF
+</a>
+
+{% endif %}
+
+<a href="{{ url_for('auth.logout') }}" class="logout">
+<i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+</a>
+
+</div>
+
+
+<!-- CONTENIDO -->
+
+<div class="main-content">
+
+<div class="banner-dashboard">
+
+<h2>{% block banner_title %}{% endblock %}</h2>
+
+<p>{% block banner_text %}{% endblock %}</p>
+
+</div>
+
+{% block content %}
+{% endblock %}
+
+</div>
+
+</body>
+
+</html>

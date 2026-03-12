@@ -1,0 +1,38 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Subir Documento{% endblock %}
+{% block banner_title %}Subir Documento{% endblock %}
+{% block banner_text %}Adjunta documentos relacionados con tus consultas legales{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card p-4">
+
+            <h3 class="text-center mb-4 fw-bold">Cargar Documento</h3>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label class="form-label">Seleccionar archivo</label>
+                    <input type="file" name="archivo" class="form-control" required>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Subir Documento
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

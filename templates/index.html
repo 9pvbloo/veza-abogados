@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- BANNER -->
+<div class="container mt-4">
+
+    <div class="position-relative">
+
+        <img src="{{ url_for('static', filename='img/banner_veza.jpg') }}" 
+        class="img-fluid rounded shadow">
+
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+
+            <h1 class="fw-bold">Veza Abogados</h1>
+
+            <p class="lead">
+                Defendemos tus derechos con profesionalismo y compromiso
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- BIENVENIDA -->
+<div class="container mt-5">
+
+<h2 class="text-center fw-bold">Bienvenido a Veza Abogados</h2>
+
+<p class="text-center mt-3">
+
+Somos un estudio jurídico comprometido con brindar asesoría legal 
+especializada, ofreciendo soluciones jurídicas eficientes con ética, 
+confidencialidad y excelencia profesional.
+
+</p>
+
+</div>
+
+
+<!-- MISION Y VISION -->
+<div class="container mt-5">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="card shadow p-3">
+
+<h3 class="text-primary">Misión</h3>
+
+<p>
+
+Brindar servicios legales eficientes y confiables, ofreciendo soluciones 
+jurídicas que protejan los derechos de nuestros clientes mediante una 
+atención personalizada y un alto nivel de profesionalismo.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card shadow p-3">
+
+<h3 class="text-success">Visión</h3>
+
+<p>
+
+Ser un estudio jurídico reconocido por su ética, profesionalismo e innovación 
+tecnológica, destacando en la resolución efectiva de casos y en la satisfacción 
+de nuestros clientes.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- AREAS DE PRACTICA -->
+<div class="container mt-5">
+
+<h2 class="text-center fw-bold">Áreas de Práctica</h2>
+
+<p class="text-center text-muted">
+Contamos con abogados especializados en diversas áreas del derecho.
+</p>
+
+<div class="row mt-4">
+
+<!-- DERECHO PENAL -->
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<img src="{{ url_for('static', filename='img/derecho_penal.avif') }}" 
+class="card-img-top">
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Penal</h5>
+
+<p class="card-text">
+
+Defensa y asesoría legal en procesos penales,
+protegiendo los derechos de nuestros clientes.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DERECHO CIVIL -->
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<img src="{{ url_for('static', filename='img/derecho_civil.avif') }}" 
+class="card-img-top">
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Civil</h5>
+
+<p class="card-text">
+
+Asesoría en contratos, obligaciones,
+responsabilidad civil y conflictos legales.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DERECHO AMBIENTAL -->
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<img src="{{ url_for('static', filename='img/derecho_ambiental.avif') }}" 
+class="card-img-top">
+
+<div class="card-body text-center">
+
+<h5 class="card-title">Derecho Ambiental</h5>
+
+<p class="card-text">
+
+Asesoría legal en normativas ambientales,
+protección del medio ambiente y cumplimiento regulatorio.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SECCION CONTACTO -->
+<div class="container mt-5 mb-5">
+
+<div class="card bg-dark text-white text-center p-4">
+
+<h3>¿Necesitas asesoría legal?</h3>
+
+<p>
+Nuestro equipo de abogados está listo para ayudarte.
+</p>
+
+<a href="/registro" class="btn btn-primary">
+Registrarse como cliente
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

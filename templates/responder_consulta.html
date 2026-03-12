@@ -1,0 +1,51 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Responder Consulta{% endblock %}
+
+{% block banner_title %}Responder Consulta{% endblock %}
+{% block banner_text %}Escribe la respuesta para tu cliente{% endblock %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+<h4 class="mb-4">Consulta del Cliente</h4>
+
+<div class="mb-3">
+<strong>Asunto:</strong>
+<p>{{ consulta.asunto }}</p>
+</div>
+
+<div class="mb-4">
+<strong>Mensaje:</strong>
+<p>{{ consulta.mensaje }}</p>
+</div>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">Respuesta</label>
+
+<textarea
+name="respuesta"
+class="form-control"
+rows="5"
+required
+></textarea>
+
+</div>
+
+<button type="submit" class="btn btn-success">
+Enviar Respuesta
+</button>
+
+<a href="{{ url_for('abogado.mis_consultas') }}" class="btn btn-secondary">
+Volver
+</a>
+
+</form>
+
+</div>
+
+{% endblock %}

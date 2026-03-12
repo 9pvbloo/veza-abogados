@@ -1,0 +1,104 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Consultas{% endblock %}
+
+{% block banner_title %}Consultas{% endblock %}
+{% block banner_text %}Revisa el estado de tus consultas{% endblock %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+<h4 class="mb-4">Lista de Consultas</h4>
+
+{% if consultas %}
+
+<div class="table-responsive">
+
+<table class="table table-hover">
+
+<thead class="table-dark">
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Asunto</th>
+<th>Estado</th>
+<th>Fecha</th>
+<th>Acción</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for item in consultas %}
+
+{% if item is iterable and item|length == 2 %}
+{% set consulta = item[0] %}
+{% set cliente = item[1] %}
+{% else %}
+{% set consulta = item %}
+{% set cliente = None %}
+{% endif %}
+
+<tr>
+
+<td>{{ consulta.id }}</td>
+
+<td>
+{% if cliente %}
+{{ cliente.usuario.nombre }}
+{% else %}
+Mi consulta
+{% endif %}
+</td>
+
+<td>{{ consulta.asunto }}</td>
+
+<td>
+{% if consulta.estado == "Pendiente" %}
+<span class="badge bg-warning text-dark">Pendiente</span>
+{% else %}
+<span class="badge bg-success">Respondida</span>
+{% endif %}
+</td>
+
+<td>{{ consulta.fecha_creacion }}</td>
+
+<td>
+
+{% if current_user.rol == "abogado" %}
+
+<a href="{{ url_for('abogado.responder_consulta', consulta_id=consulta.id) }}"
+class="btn btn-sm btn-primary">
+Responder
+</a>
+
+{% else %}
+
+<span class="text-muted">Esperando respuesta</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info text-center">
+No hay consultas registradas.
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

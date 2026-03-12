@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mb-5">
+
+    <div class="page-header">
+        <h1 class="fw-bold">Derecho Ambiental</h1>
+        <p class="lead mb-0">
+            Asesoría legal en normativas y cumplimiento ambiental.
+        </p>
+    </div>
+
+    <div class="row mt-5 g-4 align-items-center">
+
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='img/derecho_ambiental.avif') }}" class="img-fluid rounded shadow">
+        </div>
+
+        <div class="col-md-6">
+            <div class="section-box">
+                <h3 class="fw-bold">¿Qué ofrecemos?</h3>
+                <p>
+                    Brindamos orientación jurídica en regulación ambiental,
+                    cumplimiento normativo y prevención de contingencias legales
+                    relacionadas con el medio ambiente.
+                </p>
+
+                <ul>
+                    <li>Cumplimiento de normativa ambiental</li>
+                    <li>Asesoría en procedimientos administrativos</li>
+                    <li>Prevención de sanciones</li>
+                    <li>Consultoría legal ambiental</li>
+                </ul>
+
+                <a href="{{ url_for('contacto') }}" class="btn btn-primary mt-3">Solicitar asesoría</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
