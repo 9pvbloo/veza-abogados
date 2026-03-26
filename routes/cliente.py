@@ -17,3 +17,15 @@ def mis_consultas_cliente():
     consultas = Consulta.query.filter_by(cliente_id=cliente.id).all()
 
     return render_template('mis_consultas_cliente.html', consultas=consultas)
+
+@cliente_bp.route('/consulta/<int:consulta_id>')
+@login_required
+def detalle_consulta(consulta_id):
+
+    if current_user.rol != "cliente":
+        flash("Acceso no autorizado")
+        return redirect(url_for('dashboard'))
+
+    consulta = Consulta.query.get_or_404(consulta_id)
+
+    return render_template('detalle_consulta.html', consulta=consulta)

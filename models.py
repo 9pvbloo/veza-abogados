@@ -29,6 +29,7 @@ class Cliente(db.Model):
     usuario = db.relationship('Usuario')
 
     dni = db.Column(db.String(15))
+    ruc = db.Column(db.String(11))
     telefono = db.Column(db.String(20))
     direccion = db.Column(db.String(255))
 
@@ -56,16 +57,44 @@ class Asignacion(db.Model):
 
 
 class Consulta(db.Model):
+
     __tablename__ = 'consultas'
 
     id = db.Column(db.Integer, primary_key=True)
-    cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
-    abogado_id = db.Column(db.Integer, db.ForeignKey('abogados.id'), nullable=True)
+
+    cliente_id = db.Column(
+        db.Integer,
+        db.ForeignKey('clientes.id'),
+        nullable=False
+    )
+
+    abogado_id = db.Column(
+        db.Integer,
+        db.ForeignKey('abogados.id'),
+        nullable=True
+    )
+
+    area = db.Column(db.String(100), nullable=False)
+
     asunto = db.Column(db.String(200), nullable=False)
+
     mensaje = db.Column(db.Text, nullable=False)
+
     respuesta = db.Column(db.Text)
+
     estado = db.Column(db.String(50), default="Pendiente")
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+
+    fecha_creacion = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    abogado = db.relationship('Abogado', backref='consultas')
+
+    cliente = db.relationship(
+        'Cliente',
+        backref='consultas_cliente'
+    )
 
 
 class Documento(db.Model):
@@ -77,3 +106,15 @@ class Documento(db.Model):
     nombre_archivo = db.Column(db.String(255))
     archivo = db.Column(db.LargeBinary)
     fecha_subida = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Mensaje(db.Model):
+    __tablename__ = 'mensajes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    consulta_id = db.Column(db.Integer, db.ForeignKey('consultas.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    contenido = db.Column(db.Text, nullable=False)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+
+    usuario = db.relationship('Usuario')

@@ -8,30 +8,51 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-md-8">
+<div class="col-lg-8 col-xl-6">
 
-        <div class="card p-4">
+<div class="card shadow border-0">
 
-            <h3 class="text-center mb-4 fw-bold">Cargar Documento</h3>
+<div class="card-body p-5 text-center">
 
-            <form method="POST" enctype="multipart/form-data">
+<h4 class="fw-bold mb-3">Cargar Documento</h4>
 
-                <div class="mb-3">
-                    <label class="form-label">Seleccionar archivo</label>
-                    <input type="file" name="archivo" class="form-control" required>
-                </div>
+<p class="text-muted mb-4">
+Sube archivos importantes como contratos, pruebas o documentos legales.
+</p>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">
-                        Subir Documento
-                    </button>
-                </div>
+<form method="POST" enctype="multipart/form-data">
 
-            </form>
+<!-- ZONA DE SUBIDA -->
+<label class="upload-box">
 
-        </div>
+<input type="file" name="archivo" required hidden>
 
-    </div>
+<div class="upload-content">
+
+<div class="upload-icon mb-2">📁</div>
+
+<p class="fw-semibold mb-1">Haz clic para seleccionar archivo</p>
+
+<p class="text-muted small">
+PDF, Word, imágenes (máx. 16MB)
+</p>
+
+</div>
+
+</label>
+
+<!-- BOTÓN -->
+<button type="submit" class="btn btn-primary w-100 mt-4">
+Subir Documento
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 

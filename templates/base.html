@@ -10,6 +10,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 
 <style>
 
@@ -18,7 +21,72 @@ height:250px;
 object-fit:cover;
 }
 
+/* ===== ANIMACIONES PREMIUM ===== */
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Variantes */
+.fade-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 0.8s ease;
+}
+
+.fade-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 0.8s ease;
+}
+
+.fade-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.2
+    });
+
+    document.querySelectorAll('.fade-in, .fade-left, .fade-right')
+        .forEach(el => observer.observe(el));
+
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const navbar = document.getElementById("navbar");
+
+    if (window.location.pathname === "/") {
+        navbar.classList.add("nav-transparent");
+    } else {
+        navbar.classList.add("nav-solid", "nav-shrink");
+    }
+});
+</script>
 
 <style>
 body{
@@ -89,48 +157,43 @@ font-weight:500;
 
 <!-- NAVBAR -->
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav id="navbar" class="navbar navbar-expand-lg fixed-top">
 
 <div class="container">
 
-<a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+<a class="navbar-brand d-flex align-items-center text-white" href="{{ url_for('home') }}">
 
-<img src="{{ url_for('static', filename='img/logo_veza.jpg') }}" width="40" class="me-2">
-
-<strong>Veza Abogados</strong>
-
+<strong>VEZA ABOGADOS</strong>
 </a>
 
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-
+<button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
 <span class="navbar-toggler-icon"></span>
-
 </button>
 
 <div class="collapse navbar-collapse" id="menu">
 
-<ul class="navbar-nav ms-auto">
+<ul class="navbar-nav ms-auto align-items-center">
 
 <li class="nav-item">
-<a class="nav-link" href="{{ url_for('home') }}">Inicio</a>
+<a class="nav-link text-white" href="{{ url_for('home') }}">Inicio</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="{{ url_for('areas') }}">Áreas</a>
+<a class="nav-link text-white" href="{{ url_for('areas') }}">Áreas</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="{{ url_for('contacto') }}">Contacto</a>
+<a class="nav-link text-white" href="{{ url_for('contacto') }}">Contacto</a>
 </li>
 
-<li class="nav-item">
-<a class="nav-link btn btn-primary text-white ms-2 px-3" href="{{ url_for('auth.login') }}">
+<li class="nav-item ms-2">
+<a class="btn-login" href="{{ url_for('auth.login') }}">
 Ingresar
 </a>
 </li>
 
-<li class="nav-item">
-<a class="nav-link btn btn-success text-white ms-2 px-3" href="{{ url_for('auth.registro') }}">
+<li class="nav-item ms-2">
+<a class="btn-premium" href="{{ url_for('auth.registro') }}">
 Registrarse
 </a>
 </li>
@@ -154,11 +217,11 @@ Registrarse
 
 <footer class="bg-dark text-white text-center mt-5 p-4">
 
-<p class="mb-1">© 2026 Veza Abogados S.A.C</p>
+<p class="mb-1">©2026 VEZA ABOGADOS S.A.C</p>
 
 <p class="mb-1">Sistema Web de Portal de Clientes</p>
 
-<p class="mb-0">Contacto: contacto@vezaabogados.com</p>
+<p class="mb-0">Contacto: estudiovezaabogados@gmail.com</p>
 
 </footer>
 

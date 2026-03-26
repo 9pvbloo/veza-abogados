@@ -2,201 +2,167 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<div class="container mt-4">
+<!-- HERO -->
+<section class="hero-premium">
 
-    <div class="position-relative">
+    <div class="hero-content text-center text-white fade-in">
+        <h1>VEZA ABOGADOS</h1>
 
-        <img src="{{ url_for('static', filename='img/banner_veza.jpg') }}" 
-        class="img-fluid rounded shadow">
+        <p>
+            Asesoría legal estratégica con compromiso, ética y resultados
+        </p>
 
-        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
-
-            <h1 class="fw-bold">Veza Abogados</h1>
-
-            <p class="lead">
-                Defendemos tus derechos con profesionalismo y compromiso
-            </p>
-
-        </div>
-
+        <a href="{{ url_for('auth.registro') }}" class="btn-premium">
+            Solicitar asesoría
+        </a>
     </div>
 
+</section>
+
+<!-- SECCION EMPRESARIAL -->
+<section class="section-premium fade-in">
+
+<div class="container">
+
+<div class="row align-items-center g-5">
+
+<!-- TEXTO -->
+<div class="col-md-6 fade-left">
+
+<h2 class="title-premium">
+Respaldo legal para decisiones empresariales clave
+</h2>
+
+<p class="text-premium mt-3">
+En Veza Abogados contamos con amplia experiencia brindando asesoría legal estratégica a empresas e inversionistas. 
+Nuestra presencia y enfoque multidisciplinario nos permite ofrecer soluciones integrales con alto nivel profesional.
+</p>
+
+<p class="text-premium">
+Acompañamos a cada cliente con un enfoque estratégico y personalizado, orientado a proteger su operación y potenciar su crecimiento con seguridad jurídica.
+</p>
+
 </div>
 
+<!-- IMAGEN -->
+<div class="col-md-6 text-center fade-right">
+
+<img src="{{ url_for('static', filename='img/respaldo_legal.jpg') }}" 
+class="img-premium">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
 
 <!-- BIENVENIDA -->
-<div class="container mt-5">
+<section class="section-premium text-center">
 
-<h2 class="text-center fw-bold">Bienvenido a Veza Abogados</h2>
+    <div class="container">
+        <h2 class="title-premium fade-in">Experiencia legal que genera confianza</h2>
 
-<p class="text-center mt-3">
+        <p class="text-premium fade-in">
+            En Veza Abogados brindamos soluciones jurídicas eficientes, 
+            combinando experiencia profesional, tecnología y atención personalizada.
+        </p>
+    </div>
 
-Somos un estudio jurídico comprometido con brindar asesoría legal 
-especializada, ofreciendo soluciones jurídicas eficientes con ética, 
-confidencialidad y excelencia profesional.
-
-</p>
-
-</div>
+</section>
 
 
-<!-- MISION Y VISION -->
-<div class="container mt-5">
+<!-- MISION VISION -->
+<section class="section-premium bg-soft">
 
-<div class="row">
+<div class="container">
 
-<div class="col-md-6">
+<div class="row justify-content-center g-4">
 
-<div class="card shadow p-3">
-
-<h3 class="text-primary">Misión</h3>
-
+<div class="col-md-5 fade-left">
+<div class="card-premium">
+<h4>Misión</h4>
 <p>
-
-Brindar servicios legales eficientes y confiables, ofreciendo soluciones 
-jurídicas que protejan los derechos de nuestros clientes mediante una 
-atención personalizada y un alto nivel de profesionalismo.
-
+Brindar soluciones legales eficientes que protejan los derechos de nuestros clientes
+con ética, compromiso y profesionalismo.
 </p>
-
+</div>
 </div>
 
-</div>
-
-<div class="col-md-6">
-
-<div class="card shadow p-3">
-
-<h3 class="text-success">Visión</h3>
-
+<div class="col-md-5 fade-right">
+<div class="card-premium">
+<h4>Visión</h4>
 <p>
-
-Ser un estudio jurídico reconocido por su ética, profesionalismo e innovación 
-tecnológica, destacando en la resolución efectiva de casos y en la satisfacción 
-de nuestros clientes.
-
+Ser un estudio jurídico líder, reconocido por su innovación, excelencia
+y resultados en la resolución de casos.
 </p>
-
+</div>
 </div>
 
 </div>
 
 </div>
 
+</section>
+
+
+<!-- AREAS -->
+<section class="section-premium text-center">
+
+<div class="container">
+
+<h2 class="title-premium">Áreas de práctica</h2>
+
+<div class="row mt-5 g-4">
+
+<div class="col-md-4 fade-in">
+<div class="card-premium hover">
+<img src="{{ url_for('static', filename='img/derecho_penal.avif') }}">
+<h5>Derecho Penal</h5>
+<p>Defensa y representación en procesos penales.</p>
+</div>
 </div>
 
-
-<!-- AREAS DE PRACTICA -->
-<div class="container mt-5">
-
-<h2 class="text-center fw-bold">Áreas de Práctica</h2>
-
-<p class="text-center text-muted">
-Contamos con abogados especializados en diversas áreas del derecho.
-</p>
-
-<div class="row mt-4">
-
-<!-- DERECHO PENAL -->
-<div class="col-md-4">
-
-<div class="card shadow">
-
-<img src="{{ url_for('static', filename='img/derecho_penal.avif') }}" 
-class="card-img-top">
-
-<div class="card-body text-center">
-
-<h5 class="card-title">Derecho Penal</h5>
-
-<p class="card-text">
-
-Defensa y asesoría legal en procesos penales,
-protegiendo los derechos de nuestros clientes.
-
-</p>
-
+<div class="col-md-4 fade-in">
+<div class="card-premium hover">
+<img src="{{ url_for('static', filename='img/derecho_civil.avif') }}">
+<h5>Derecho Civil</h5>
+<p>Asesoría en contratos, obligaciones y conflictos.</p>
+</div>
 </div>
 
+<div class="col-md-4 fade-in">
+<div class="card-premium hover">
+<img src="{{ url_for('static', filename='img/derecho_ambiental.avif') }}">
+<h5>Derecho Ambiental</h5>
+<p>Cumplimiento normativo y defensa ambiental.</p>
 </div>
-
-</div>
-
-
-<!-- DERECHO CIVIL -->
-<div class="col-md-4">
-
-<div class="card shadow">
-
-<img src="{{ url_for('static', filename='img/derecho_civil.avif') }}" 
-class="card-img-top">
-
-<div class="card-body text-center">
-
-<h5 class="card-title">Derecho Civil</h5>
-
-<p class="card-text">
-
-Asesoría en contratos, obligaciones,
-responsabilidad civil y conflictos legales.
-
-</p>
-
 </div>
 
 </div>
 
 </div>
 
-
-<!-- DERECHO AMBIENTAL -->
-<div class="col-md-4">
-
-<div class="card shadow">
-
-<img src="{{ url_for('static', filename='img/derecho_ambiental.avif') }}" 
-class="card-img-top">
-
-<div class="card-body text-center">
-
-<h5 class="card-title">Derecho Ambiental</h5>
-
-<p class="card-text">
-
-Asesoría legal en normativas ambientales,
-protección del medio ambiente y cumplimiento regulatorio.
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+</section>
 
 
-<!-- SECCION CONTACTO -->
-<div class="container mt-5 mb-5">
+<!-- CTA -->
+<section class="section-premium">
 
-<div class="card bg-dark text-white text-center p-4">
+<div class="container">
 
+<div class="cta-premium text-center fade-in">
 <h3>¿Necesitas asesoría legal?</h3>
+<p>Nuestro equipo está listo para ayudarte.</p>
 
-<p>
-Nuestro equipo de abogados está listo para ayudarte.
-</p>
-
-<a href="/registro" class="btn btn-primary">
-Registrarse como cliente
+<a href="{{ url_for('auth.registro') }}" class="btn-premium">
+Comenzar ahora
 </a>
-
 </div>
 
 </div>
+
+</section>
 
 {% endblock %}

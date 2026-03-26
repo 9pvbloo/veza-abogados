@@ -20,73 +20,271 @@ body{
 background:#f5f6fa;
 }
 
-/* SIDEBAR */
+
+/* ===== SIDEBAR ===== */
 
 .sidebar{
+
 width:260px;
 height:100vh;
+
 background:#0f172a;
+
 padding:25px 15px;
+
 position:fixed;
+
 left:0;
 top:0;
+
+display:flex;
+
+flex-direction:column;
+
+transition:0.3s;
+
+z-index:1000;
 }
+
+
+/* OCULTAR EN CELULAR */
+
+@media (max-width: 768px){
+
+.sidebar{
+
+left:-260px;
+
+}
+
+.sidebar.active{
+
+left:0;
+
+}
+
+}
+
+
+
+/* TITULO */
 
 .sidebar h4{
+
 color:white;
+
 text-align:center;
-margin-bottom:30px;
+
+margin-bottom:25px;
+
+font-weight:700;
+
 }
+
+
+
+/* USUARIO */
+
+.sidebar .text-center{
+
+border-bottom:1px solid #1e293b;
+
+padding-bottom:15px;
+
+margin-bottom:20px;
+
+}
+
+
+
+/* LINKS */
 
 .sidebar a{
+
 display:flex;
+
 align-items:center;
-gap:10px;
+
+gap:12px;
+
+color:#cbd5e1;
+
+padding:12px 15px;
+
+margin-bottom:8px;
+
+text-decoration:none;
+
+border-radius:10px;
+
+transition:all 0.25s ease;
+
+position:relative;
+
+}
+
+
+
+/* HOVER */
+
+.sidebar a:hover{
+
+background:#1e293b;
 
 color:white;
-padding:12px 15px;
-margin-bottom:10px;
-background:#1e293b;
-text-decoration:none;
-border-radius:8px;
 
-transition:all 0.2s ease;
+transform:translateX(5px);
+
 }
 
-.sidebar a:hover{
-background:#334155;
-transform:translateX(4px);
+
+
+/* ACTIVO */
+
+.sidebar a.active{
+
+background:#2563eb;
+
+color:white;
+
 }
 
-.sidebar a:hover{
-background:#334155;
-}
+
+
+/* LOGOUT */
 
 .sidebar .logout{
+
 background:#dc2626;
+
+color:white;
+
+margin-top:auto;
+
 }
 
-/* CONTENIDO */
+
+
+.sidebar .logout:hover{
+
+background:#b91c1c;
+
+}
+
+
+
+/* ===== CONTENIDO ===== */
 
 .main-content{
+
 margin-left:260px;
+
 padding:40px;
+
+transition:0.3s;
+
 }
 
-/* BANNER */
+
+
+/* EN CELULAR */
+
+@media (max-width:768px){
+
+.main-content{
+
+margin-left:0;
+
+padding:20px;
+
+}
+
+}
+
+
+
+/* ===== BANNER ===== */
 
 .banner-dashboard{
-background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+
+background-image:
+
+linear-gradient(
+
+rgba(0,0,0,0.6),
+
+rgba(0,0,0,0.6)
+
+),
+
 url("{{ url_for('static', filename='img/banner_veza.jpg') }}");
 
+
 background-size:cover;
+
 background-position:center;
 
 color:white;
-padding:70px 20px;
+
+padding:50px 20px;
+
 border-radius:12px;
+
 text-align:center;
-margin-bottom:40px;
+
+margin-bottom:30px;
+
+}
+
+
+
+@media (max-width:768px){
+
+.banner-dashboard{
+
+padding:35px 15px;
+
+}
+
+}
+
+
+/* BOTON MENU */
+
+.menu-btn{
+
+display:none;
+
+position:fixed;
+
+top:15px;
+
+left:15px;
+
+z-index:1100;
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:10px 14px;
+
+border-radius:8px;
+
+}
+
+
+
+@media (max-width:768px){
+
+.menu-btn{
+
+display:block;
+
+}
+
 }
 
 </style>
@@ -94,6 +292,11 @@ margin-bottom:40px;
 </head>
 
 <body>
+    <button class="menu-btn" onclick="toggleMenu()">
+
+    <i class="bi bi-list"></i>
+
+    </button>
 
 <!-- SIDEBAR -->
 
@@ -117,21 +320,29 @@ margin-bottom:40px;
 
 </div>
 
-<a href="{{ url_for('dashboard') }}">
+<!-- DASHBOARD -->
+<a href="{{ url_for('dashboard') }}"
+class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
 <i class="bi bi-speedometer2"></i> Dashboard
 </a>
 
 {% if current_user.rol == "cliente" %}
 
-<a href="{{ url_for('consultas.nueva_consulta') }}">
+<!-- NUEVA CONSULTA -->
+<a href="{{ url_for('consultas.nueva_consulta') }}"
+class="{% if request.endpoint == 'consultas.nueva_consulta' %}active{% endif %}">
 <i class="bi bi-chat-left-text"></i> Nueva Consulta
 </a>
 
-<a href="{{ url_for('consultas.mis_consultas') }}">
+<!-- MIS CONSULTAS (CORREGIDO) -->
+<a href="{{ url_for('consultas.mis_consultas') }}"
+class="{% if request.endpoint == 'consultas.mis_consultas' %}active{% endif %}">
 <i class="bi bi-folder2-open"></i> Mis Consultas
 </a>
 
-<a href="{{ url_for('documentos.subir_documento') }}">
+<!-- DOCUMENTOS -->
+<a href="{{ url_for('documentos.subir_documento') }}"
+class="{% if request.endpoint == 'documentos.subir_documento' %}active{% endif %}">
 <i class="bi bi-upload"></i> Subir Documento
 </a>
 
@@ -140,7 +351,8 @@ margin-bottom:40px;
 
 {% if current_user.rol == "abogado" %}
 
-<a href="{{ url_for('abogado.mis_consultas') }}">
+<a href="{{ url_for('abogado.mis_consultas') }}"
+class="{% if request.endpoint == 'abogado.mis_consultas' %}active{% endif %}">
 <i class="bi bi-journal-text"></i> Consultas Asignadas
 
 {% if pendientes is defined %}
@@ -148,7 +360,8 @@ margin-bottom:40px;
 {% endif %}
 </a>
 
-<a href="{{ url_for('abogado.mis_documentos') }}">
+<a href="{{ url_for('abogado.mis_documentos') }}"
+class="{% if request.endpoint == 'abogado.mis_documentos' %}active{% endif %}">
 <i class="bi bi-file-earmark-text"></i> Documentos
 </a>
 
@@ -157,24 +370,29 @@ margin-bottom:40px;
 
 {% if current_user.rol == "admin" %}
 
-<a href="{{ url_for('admin.crear_abogado') }}">
+<a href="{{ url_for('admin.crear_abogado') }}"
+class="{% if request.endpoint == 'admin.crear_abogado' %}active{% endif %}">
 <i class="bi bi-person-plus"></i> Crear Abogado
 </a>
 
-<a href="{{ url_for('admin.asignar_cliente') }}">
+<a href="{{ url_for('admin.asignar_cliente') }}"
+class="{% if request.endpoint == 'admin.asignar_cliente' %}active{% endif %}">
 <i class="bi bi-diagram-3"></i> Asignar Cliente
 </a>
 
-<a href="{{ url_for('admin.listar_usuarios') }}">
+<a href="{{ url_for('admin.listar_usuarios') }}"
+class="{% if request.endpoint == 'admin.listar_usuarios' %}active{% endif %}">
 <i class="bi bi-people"></i> Usuarios
 </a>
 
-<a href="{{ url_for('admin.reporte_pdf') }}">
+<a href="{{ url_for('admin.reporte_pdf') }}"
+class="{% if request.endpoint == 'admin.reporte_pdf' %}active{% endif %}">
 <i class="bi bi-file-earmark-pdf"></i> Reporte PDF
 </a>
 
 {% endif %}
 
+<!-- LOGOUT -->
 <a href="{{ url_for('auth.logout') }}" class="logout">
 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
 </a>
@@ -200,5 +418,17 @@ margin-bottom:40px;
 </div>
 
 </body>
+
+<script>
+
+function toggleMenu(){
+
+document.querySelector(".sidebar")
+
+.classList.toggle("active");
+
+}
+
+</script>
 
 </html>

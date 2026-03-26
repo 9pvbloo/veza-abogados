@@ -7,28 +7,40 @@
 
 {% block content %}
 
-<div class="card shadow p-4">
+<!-- ===== RESUMEN ===== -->
+<div class="row mb-4 g-3">
 
-<h4 class="mb-4">Lista de Consultas</h4>
+<div class="col-md-4">
+<div class="stat-card">
+<h6>Total</h6>
+<h3>{{ consultas|length }}</h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="stat-card warning">
+<h6>Pendientes</h6>
+<h3>
+{{ consultas|selectattr('estado','equalto','Pendiente')|list|length }}
+</h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="stat-card success">
+<h6>Respondidas</h6>
+<h3>
+{{ consultas|selectattr('estado','equalto','Respondida')|list|length }}
+</h3>
+</div>
+</div>
+
+</div>
+
+<!-- ===== LISTADO ===== -->
+<div class="row g-4">
 
 {% if consultas %}
-
-<div class="table-responsive">
-
-<table class="table table-hover">
-
-<thead class="table-dark">
-<tr>
-<th>ID</th>
-<th>Cliente</th>
-<th>Asunto</th>
-<th>Estado</th>
-<th>Fecha</th>
-<th>Acción</th>
-</tr>
-</thead>
-
-<tbody>
 
 {% for item in consultas %}
 
@@ -40,61 +52,80 @@
 {% set cliente = None %}
 {% endif %}
 
-<tr>
+<div class="col-md-6 col-lg-4">
 
-<td>{{ consulta.id }}</td>
+<div class="consulta-card">
 
-<td>
-{% if cliente %}
-{{ cliente.usuario.nombre }}
-{% else %}
-Mi consulta
-{% endif %}
-</td>
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-2">
 
-<td>{{ consulta.asunto }}</td>
+<span class="badge-id">Consulta #{{ consulta.id }}</span>
 
-<td>
 {% if consulta.estado == "Pendiente" %}
-<span class="badge bg-warning text-dark">Pendiente</span>
+<span class="badge bg-warning text-dark">⏳ Pendiente</span>
 {% else %}
-<span class="badge bg-success">Respondida</span>
+<span class="badge bg-success">✔ Respondida</span>
 {% endif %}
-</td>
-
-<td>{{ consulta.fecha_creacion }}</td>
-
-<td>
-
-{% if current_user.rol == "abogado" %}
-
-<a href="{{ url_for('abogado.responder_consulta', consulta_id=consulta.id) }}"
-class="btn btn-sm btn-primary">
-Responder
-</a>
-
-{% else %}
-
-<span class="text-muted">Esperando respuesta</span>
-
-{% endif %}
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
 
 </div>
 
+<!-- ASUNTO -->
+<h5 class="fw-bold">{{ consulta.asunto }}</h5>
+
+<!-- CLIENTE -->
+<p class="text-muted small mb-1">
+
+{% if cliente %}
+Cliente: {{ cliente.usuario.nombre }}
+{% else %}
+Mi consulta
+{% endif %}
+
+</p>
+
+<!-- FECHA -->
+<p class="small text-secondary mb-3">
+{{ consulta.fecha_creacion }}
+</p>
+
+<!-- ACCIONES -->
+<div class="d-flex justify-content-between align-items-center">
+
+<!-- 👇 NUEVO BOTÓN VER -->
+<a href="{{ url_for('consultas.ver_consulta', id=consulta.id) }}"
+class="btn btn-sm btn-dark">
+Ver Conversación
+</a>
+
+{% if current_user.rol == "abogado" %}
+
+
 {% else %}
 
+<span class="text-muted small">
+{% if consulta.estado == "Respondida" %}
+Respuesta disponible
+{% else %}
+Esperando respuesta
+{% endif %}
+</span>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="col-12">
 <div class="alert alert-info text-center">
 No hay consultas registradas.
+</div>
 </div>
 
 {% endif %}

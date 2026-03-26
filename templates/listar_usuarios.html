@@ -7,40 +7,45 @@
 
 {% block content %}
 
-<div class="card shadow p-4">
+<div class="card shadow border-0 p-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
 
-    <h5 class="mb-0">Lista de Usuarios</h5>
+    <div>
+        <h5 class="mb-1 fw-bold">Usuarios del Sistema</h5>
+        <small class="text-muted">Gestión completa de usuarios registrados</small>
+    </div>
 
-    <span class="badge bg-primary">
-        Total: {{ usuarios|length }}
+    <span class="badge bg-primary fs-6 px-3 py-2">
+        {{ usuarios|length }} usuarios
     </span>
 
 </div>
 
-<div class="mb-3">
-    <input type="text" id="buscadorUsuarios" class="form-control" placeholder="Buscar por nombre o email...">
+<!-- BUSCADOR -->
+<div class="mb-4">
+    <input type="text" id="buscadorUsuarios"
+    class="form-control buscador-pro"
+    placeholder="🔍 Buscar por nombre o email...">
 </div>
 
 {% if usuarios %}
 
 <div class="table-responsive">
 
-<table class="table table-hover align-middle" id="tablaUsuarios">
+<table class="table table-hover align-middle tabla-pro" id="tablaUsuarios">
 
-<thead class="table-dark">
-
+<thead>
 <tr>
 <th>ID</th>
-<th>Nombre</th>
+<th>Usuario</th>
 <th>Email</th>
 <th>Rol</th>
 <th>Estado</th>
 <th>Fecha</th>
 <th>Acción</th>
 </tr>
-
 </thead>
 
 <tbody>
@@ -49,7 +54,7 @@
 
 <tr>
 
-<td>{{ user.id }}</td>
+<td class="text-muted">#{{ user.id }}</td>
 
 <td>
 <strong>{{ user.nombre }}</strong>
@@ -58,39 +63,35 @@
 <td>{{ user.email }}</td>
 
 <td>
-
 {% if user.rol == "admin" %}
-<span class="badge bg-danger">Admin</span>
+<span class="badge rol-admin">Admin</span>
 {% elif user.rol == "abogado" %}
-<span class="badge bg-info">Abogado</span>
+<span class="badge rol-abogado">Abogado</span>
 {% else %}
-<span class="badge bg-secondary">Cliente</span>
+<span class="badge rol-cliente">Cliente</span>
 {% endif %}
-
 </td>
 
 <td>
-
 {% if user.estado %}
-<span class="badge bg-success">Activo</span>
+<span class="badge estado-activo">Activo</span>
 {% else %}
-<span class="badge bg-danger">Inactivo</span>
+<span class="badge estado-inactivo">Inactivo</span>
 {% endif %}
-
 </td>
 
-<td>{{ user.fecha_creacion }}</td>
+<td class="text-muted small">{{ user.fecha_creacion }}</td>
 
 <td>
 
 {% if user.estado %}
 <a href="{{ url_for('admin.desactivar_usuario', user_id=user.id) }}"
-class="btn btn-sm btn-outline-danger">
+class="btn btn-sm btn-danger-soft">
 Desactivar
 </a>
 {% else %}
 <a href="{{ url_for('admin.activar_usuario', user_id=user.id) }}"
-class="btn btn-sm btn-outline-success">
+class="btn btn-sm btn-success-soft">
 Activar
 </a>
 {% endif %}
@@ -109,14 +110,15 @@ Activar
 
 {% else %}
 
-<div class="text-center p-4">
-<p>No hay usuarios registrados.</p>
+<div class="text-center p-5 text-muted">
+No hay usuarios registrados.
 </div>
 
 {% endif %}
 
 </div>
 
+<!-- SCRIPT BUSCADOR -->
 <script>
 document.getElementById("buscadorUsuarios").addEventListener("keyup", function() {
     let filtro = this.value.toLowerCase();
@@ -126,11 +128,9 @@ document.getElementById("buscadorUsuarios").addEventListener("keyup", function()
         let nombre = fila.cells[1].textContent.toLowerCase();
         let email = fila.cells[2].textContent.toLowerCase();
 
-        if (nombre.includes(filtro) || email.includes(filtro)) {
-            fila.style.display = "";
-        } else {
-            fila.style.display = "none";
-        }
+        fila.style.display =
+            nombre.includes(filtro) || email.includes(filtro)
+            ? "" : "none";
     });
 });
 </script>

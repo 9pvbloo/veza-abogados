@@ -19,6 +19,7 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus import ListFlowable, ListItem
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Image
 from flask import send_file
 from datetime import datetime
 import io
@@ -75,49 +76,67 @@ def asignar_cliente():
         flash("Acceso no autorizado")
         return redirect(url_for('dashboard'))
 
-    clientes = Cliente.query.all()
     abogados = Abogado.query.all()
     asignaciones = Asignacion.query.all()
+
+    # dividir consultas
+    consultas_pendientes = Consulta.query.filter_by(
+        estado="Pendiente"
+    ).order_by(Consulta.fecha_creacion.desc()).all()
+
+    consultas_asignadas = Consulta.query.filter(
+        Consulta.estado != "Pendiente"
+    ).order_by(Consulta.fecha_creacion.desc()).all()
+
 
     if request.method == 'POST':
 
         cliente_id = request.form['cliente_id']
         abogado_id = request.form['abogado_id']
 
+        # evitar duplicados
         asignacion_existente = Asignacion.query.filter_by(
             cliente_id=cliente_id,
             abogado_id=abogado_id
         ).first()
 
-        if asignacion_existente:
-            flash("Ya está asignado")
-            return redirect(url_for('admin.asignar_cliente'))
+        if not asignacion_existente:
 
-        nueva_asignacion = Asignacion(
+            nueva_asignacion = Asignacion(
+                cliente_id=cliente_id,
+                abogado_id=abogado_id
+            )
+
+            db.session.add(nueva_asignacion)
+
+
+        # actualizar consultas pendientes del cliente
+        consultas_cliente = Consulta.query.filter_by(
             cliente_id=cliente_id,
-            abogado_id=abogado_id
-        )
+            estado="Pendiente"
+        ).all()
 
-        db.session.add(nueva_asignacion)
-        db.session.commit()
+        for consulta in consultas_cliente:
 
-        # asignar abogado a consultas existentes del cliente
-        consultas = Consulta.query.filter_by(cliente_id=cliente_id).all()
-
-        for consulta in consultas:
             consulta.abogado_id = abogado_id
+            consulta.estado = "Asignado"
+
 
         db.session.commit()
 
-        flash("Cliente asignado correctamente")
+        flash("Consulta asignada correctamente")
 
         return redirect(url_for('admin.asignar_cliente'))
 
+
     return render_template(
         'asignar_cliente.html',
-        clientes=clientes,
+
         abogados=abogados,
-        asignaciones=asignaciones
+        asignaciones=asignaciones,
+
+        consultas_pendientes=consultas_pendientes,
+        consultas_asignadas=consultas_asignadas
     )
 
 @admin.route('/usuarios')
@@ -176,12 +195,31 @@ def reporte_pdf():
     elements = []
 
     styles = getSampleStyleSheet()
-    elements.append(Paragraph("REPORTE ADMINISTRATIVO - VEZA ABOGADOS", styles['Heading1']))
-    elements.append(Spacer(1, 0.3 * inch))
-    elements.append(Paragraph(f"Fecha del reporte: {datetime.now().strftime('%d/%m/%Y %H:%M')}", styles['Normal']))
-    elements.append(Spacer(1, 0.5 * inch))
 
-    # Datos
+    # ===== LOGO =====
+    logo_path = "static/img/logo_veza.jpg"  
+    logo = Image(logo_path, width=80, height=80)
+
+    # ===== HEADER =====
+    header = [
+        [logo, Paragraph("<b>VEZA ABOGADOS</b><br/>Reporte Administrativo", styles['Title'])]
+    ]
+
+    header_table = Table(header, colWidths=[90, 400])
+    elements.append(header_table)
+    elements.append(Spacer(1, 0.3 * inch))
+
+    elements.append(Paragraph(
+        f"<b>Fecha:</b> {datetime.now().strftime('%d/%m/%Y %H:%M')}",
+        styles['Normal']
+    ))
+
+    elements.append(Spacer(1, 0.4 * inch))
+
+    # ===== RESUMEN =====
+    elements.append(Paragraph("<b>Resumen General</b>", styles['Heading2']))
+    elements.append(Spacer(1, 0.2 * inch))
+
     total_usuarios = Usuario.query.count()
     total_clientes = Cliente.query.count()
     total_abogados = Abogado.query.count()
@@ -190,6 +228,7 @@ def reporte_pdf():
     inactivos = Usuario.query.filter_by(estado=False).count()
 
     data = [
+        ["Concepto", "Cantidad"],
         ["Total Usuarios", total_usuarios],
         ["Total Clientes", total_clientes],
         ["Total Abogados", total_abogados],
@@ -198,17 +237,58 @@ def reporte_pdf():
         ["Usuarios Inactivos", inactivos],
     ]
 
-    table = Table(data, colWidths=[250, 100])
+    table = Table(data, colWidths=[300, 100])
+
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#0f172a")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
         ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('ALIGN', (1, 1), (-1, -1), 'CENTER'),
     ]))
 
     elements.append(table)
 
-    doc.build(elements)
+    elements.append(Spacer(1, 0.5 * inch))
 
+    # ===== LISTA DE ABOGADOS =====
+    elements.append(Paragraph("<b>Listado de Abogados</b>", styles['Heading2']))
+    elements.append(Spacer(1, 0.2 * inch))
+
+    abogados = Abogado.query.all()
+
+    abogados_data = [["Nombre", "Email"]]
+
+    for ab in abogados:
+        abogados_data.append([
+            ab.usuario.nombre,
+            ab.usuario.email
+        ])
+
+    tabla_abogados = Table(abogados_data, colWidths=[200, 200])
+
+    tabla_abogados.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2563eb")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ]))
+
+    elements.append(tabla_abogados)
+
+    elements.append(Spacer(1, 0.5 * inch))
+
+    # ===== FOOTER =====
+    elements.append(Paragraph(
+        "Veza Abogados © 2026 - Sistema de Gestión Legal",
+        styles['Normal']
+    ))
+
+    doc.build(elements)
     buffer.seek(0)
 
     return send_file(
@@ -216,4 +296,56 @@ def reporte_pdf():
         as_attachment=True,
         download_name="reporte_admin.pdf",
         mimetype='application/pdf'
+    )
+
+@admin.route('/dashboard_admin')
+@login_required
+def dashboard_admin():
+
+    if current_user.rol != "admin":
+        flash("Acceso no autorizado")
+        return redirect(url_for('dashboard'))
+
+    # ===== GRAFICO 1 =====
+    consultas_estado = db.session.query(
+        Consulta.estado,
+        db.func.count(Consulta.id)
+    ).group_by(Consulta.estado).all()
+
+    estado_labels = [c[0] for c in consultas_estado]
+    estado_data = [c[1] for c in consultas_estado]
+
+    # ===== GRAFICO 2 =====
+    consultas_area = db.session.query(
+        Consulta.area,
+        db.func.count(Consulta.id)
+    ).group_by(Consulta.area).all()
+
+    area_labels = [c[0] for c in consultas_area]
+    area_data = [c[1] for c in consultas_area]
+
+    # ===== GRAFICO 3 =====
+    consultas_mes = db.session.query(
+        db.func.date_format(Consulta.fecha_creacion, "%Y-%m"),
+        db.func.count(Consulta.id)
+    ).group_by(
+        db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
+    ).order_by(
+        db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
+    ).all()
+
+    mes_labels = [c[0] for c in consultas_mes]
+    mes_data = [c[1] for c in consultas_mes]
+
+    return render_template(
+        "dashboard_admin.html",
+
+        estado_labels=estado_labels,
+        estado_data=estado_data,
+
+        area_labels=area_labels,
+        area_data=area_data,
+
+        mes_labels=mes_labels,
+        mes_data=mes_data
     )

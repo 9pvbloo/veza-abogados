@@ -58,21 +58,33 @@
 </div>
 
 
-<!-- GRÁFICO -->
+<div class="row mt-5 g-4">
 
-<div class="row mt-5">
+<!-- GRAFICO 1 -->
+<div class="col-md-4 col-12">
+<div class="card shadow p-4">
+<h5 class="text-center mb-3">Estado de Consultas</h5>
+<canvas id="estadoChart"></canvas>
+</div>
+</div>
 
-    <div class="col-md-10 offset-md-1">
 
-        <div class="card shadow p-4">
+<!-- GRAFICO 2 -->
+<div class="col-md-4 col-12">
+<div class="card shadow p-4">
+<h5 class="text-center mb-3">Consultas por Área</h5>
+<canvas id="areaChart"></canvas>
+</div>
+</div>
 
-            <h4 class="text-center mb-4">Estado de Consultas</h4>
 
-            <canvas id="consultasChart"></canvas>
-
-        </div>
-
-    </div>
+<!-- GRAFICO 3 -->
+<div class="col-md-4 col-12">
+<div class="card shadow p-4">
+<h5 class="text-center mb-3">Consultas por Mes</h5>
+<canvas id="mesChart"></canvas>
+</div>
+</div>
 
 </div>
 
@@ -82,30 +94,101 @@
 
 <script>
 
-const ctx = document.getElementById('consultasChart');
+// ===== GRAFICO 1 =====
+new Chart(document.getElementById("estadoChart"), {
 
-const pendientes = {{ pendientes | tojson }};
-const respondidas = {{ respondidas | tojson }};
+type: "bar",
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Pendientes', 'Respondidas'],
-        datasets: [{
-            label: 'Consultas',
-            data: [pendientes, respondidas],
-            backgroundColor: ['#f59e0b', '#22c55e']
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false }
-        },
-        scales: {
-            y: { beginAtZero: true }
-        }
-    }
+data: {
+
+labels: {{ estado_labels | tojson }},
+
+datasets: [{
+
+label: "Consultas",
+
+data: {{ estado_data | tojson }},
+
+backgroundColor: "#3b82f6"
+
+}]
+
+},
+
+options: {
+
+responsive: true,
+
+scales: {
+
+y: {
+
+beginAtZero: true
+
+}
+
+}
+
+}
+
+});
+
+
+
+// ===== GRAFICO 2 =====
+new Chart(document.getElementById("areaChart"), {
+
+type: "pie",
+
+data: {
+
+labels: {{ area_labels | tojson }},
+
+datasets: [{
+
+data: {{ area_data | tojson }},
+
+backgroundColor: [
+
+"#2563eb",
+
+"#16a34a",
+
+"#f59e0b"
+
+]
+
+}]
+
+}
+
+});
+
+
+
+// ===== GRAFICO 3 =====
+new Chart(document.getElementById("mesChart"), {
+
+type: "line",
+
+data: {
+
+labels: {{ mes_labels | tojson }},
+
+datasets: [{
+
+label: "Consultas",
+
+data: {{ mes_data | tojson }},
+
+borderColor: "#9333ea",
+
+fill: false
+
+}]
+
+}
+
 });
 
 </script>

@@ -2,85 +2,285 @@
 
 {% block title %}Asignar Cliente{% endblock %}
 
-{% block banner_title %}Asignar Cliente a Abogado{% endblock %}
-{% block banner_text %}Relacionar clientes con abogados del sistema{% endblock %}
+{% block banner_title %}Asignación de Consultas{% endblock %}
+{% block banner_text %}Elige el abogado adecuado según el tipo de caso{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
 
-<div class="col-md-6">
+<!-- ===================== -->
+<!-- CONSULTAS NUEVAS -->
+<!-- ===================== -->
 
-<div class="card shadow p-4">
+<h4 class="mb-3">
+Consultas nuevas
+</h4>
 
-<h4 class="mb-4 text-center">Asignación de Cliente</h4>
+<div class="row">
 
-<form method="POST">
+{% for c in consultas_pendientes %}
 
-<div class="mb-3">
-<label class="form-label">Cliente</label>
+<div class="col-md-6 col-lg-4">
 
-<select name="cliente_id" class="form-select" required>
+<div class="card shadow border-0 mb-4 h-100">
 
-{% for cliente in clientes %}
+<div class="card-body">
 
-<option value="{{ cliente.id }}">
-Cliente {{ cliente.usuario.nombre }}
-</option>
 
-{% endfor %}
+<!-- AREA + ESTADO -->
+<div class="d-flex justify-content-between mb-2">
 
-</select>
+<span class="badge
+{% if c.area == 'Derecho Penal' %}
+bg-danger
+
+{% elif c.area == 'Derecho Civil' %}
+bg-primary
+
+{% elif c.area == 'Derecho Ambiental' %}
+bg-success
+
+{% else %}
+bg-secondary
+{% endif %}
+">
+
+{{ c.area }}
+
+</span>
+
+
+<span class="badge bg-warning text-dark">
+Pendiente
+</span>
 
 </div>
 
 
-<div class="mb-3">
-<label class="form-label">Abogado</label>
 
-<select name="abogado_id" class="form-select" required>
+<!-- CLIENTE -->
+<h6 class="fw-bold">
+
+{{ c.cliente.usuario.nombre }}
+
+</h6>
+
+
+
+<!-- ASUNTO -->
+<p class="fw-semibold mb-1">
+
+{{ c.asunto }}
+
+</p>
+
+
+
+<!-- MENSAJE -->
+<p class="text-muted small">
+
+{{ c.mensaje[:120] }}...
+
+</p>
+
+
+
+<!-- FECHA -->
+<p class="small text-secondary">
+
+{{ c.fecha_creacion.strftime("%d/%m/%Y") }}
+
+</p>
+
+
+<hr>
+
+
+
+<!-- ASIGNAR ABOGADO -->
+<form method="POST">
+
+<input type="hidden"
+name="cliente_id"
+value="{{ c.cliente_id }}">
+
+
+<select name="abogado_id"
+class="form-select mb-2"
+required>
+
+<option value="">
+Seleccionar abogado
+</option>
+
 
 {% for abogado in abogados %}
 
 <option value="{{ abogado.id }}">
-Abogado {{ abogado.usuario.nombre }} - {{ abogado.especialidad }}
+
+{{ abogado.usuario.nombre }}
+- {{ abogado.especialidad }}
+
 </option>
 
 {% endfor %}
 
 </select>
 
-</div>
 
+<button class="btn btn-primary w-100">
 
-<button type="submit" class="btn btn-primary w-100">
-Asignar Cliente
+Asignar abogado
+
 </button>
 
 </form>
 
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- ===================== -->
+<!-- CONSULTAS ASIGNADAS -->
+<!-- ===================== -->
+
+<h4 class="mt-5 mb-3">
+Consultas asignadas
+</h4>
+
+<div class="row">
+
+{% for c in consultas_asignadas %}
+
+<div class="col-md-6 col-lg-4">
+
+<div class="card shadow-sm border-0 mb-4 h-100">
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between mb-2">
+
+<span class="badge
+{% if c.area == 'Derecho Penal' %}
+bg-danger
+
+{% elif c.area == 'Derecho Civil' %}
+bg-primary
+
+{% elif c.area == 'Derecho Ambiental' %}
+bg-success
+
+{% else %}
+bg-secondary
+{% endif %}
+">
+
+{{ c.area }}
+
+</span>
+
+
+<span class="badge bg-info">
+Asignado
+</span>
+
+</div>
+
+
+
+<h6 class="fw-bold">
+
+{{ c.cliente.usuario.nombre }}
+
+</h6>
+
+
+<p class="fw-semibold mb-1">
+
+{{ c.asunto }}
+
+</p>
+
+
+<p class="text-muted small">
+
+{{ c.mensaje[:120] }}...
+
+</p>
+
+
+<p class="small text-secondary">
+
+{{ c.fecha_creacion.strftime("%d/%m/%Y") }}
+
+</p>
+
+
+<p class="small mt-2">
+
+<strong>Abogado:</strong>
+
+{{ c.abogado.usuario.nombre }}
+
+</p>
+
+
 </div>
 
 </div>
 
 </div>
 
-<div class="card shadow p-4 mt-4">
+{% endfor %}
 
-<h5 class="mb-3">Asignaciones actuales</h5>
+</div>
+
+
+
+<!-- ===================== -->
+<!-- TABLA ASIGNACIONES -->
+<!-- ===================== -->
+
+<h4 class="mt-5 mb-3">
+Asignaciones actuales
+</h4>
+
+<div class="card shadow border-0">
+
+<div class="card-body">
 
 {% if asignaciones %}
 
-<table class="table table-striped">
+<div class="table-responsive">
+
+<table class="table table-hover align-middle">
 
 <thead class="table-dark">
 
 <tr>
+
 <th>Cliente</th>
+
 <th>Abogado</th>
+
+<th>Especialidad</th>
+
+<th>Estado</th>
+
 </tr>
 
 </thead>
+
 
 <tbody>
 
@@ -88,9 +288,40 @@ Asignar Cliente
 
 <tr>
 
-<td>{{ asignacion.cliente.usuario.nombre }}</td>
+<td class="fw-semibold">
 
-<td>{{ asignacion.abogado.usuario.nombre }}</td>
+{{ asignacion.cliente.usuario.nombre }}
+
+</td>
+
+
+<td>
+
+{{ asignacion.abogado.usuario.nombre }}
+
+</td>
+
+
+<td>
+
+<span class="badge bg-secondary">
+
+{{ asignacion.abogado.especialidad }}
+
+</span>
+
+</td>
+
+
+<td>
+
+<span class="badge bg-success">
+
+Activo
+
+</span>
+
+</td>
 
 </tr>
 
@@ -100,12 +331,22 @@ Asignar Cliente
 
 </table>
 
+</div>
+
 {% else %}
 
-<p>No hay asignaciones registradas.</p>
+<p class="text-muted">
+
+No hay asignaciones registradas.
+
+</p>
 
 {% endif %}
 
 </div>
+
+</div>
+
+
 
 {% endblock %}

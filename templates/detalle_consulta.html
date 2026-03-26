@@ -1,0 +1,54 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Detalle Consulta{% endblock %}
+
+{% block banner_title %}Detalle de Consulta{% endblock %}
+{% block banner_text %}Comunicación con tu abogado{% endblock %}
+
+{% block content %}
+
+<div class="chat-container">
+
+<!-- HEADER -->
+<div class="chat-header">
+<h5 class="mb-0">{{ consulta.asunto }}</h5>
+<small class="text-muted">{{ consulta.fecha_creacion }}</small>
+</div>
+
+<!-- CHAT -->
+<div class="chat-box">
+
+<!-- MENSAJE CLIENTE -->
+<div class="chat-message left">
+<div class="bubble bubble-client">
+<strong>Tú</strong>
+<p class="mb-0">{{ consulta.mensaje }}</p>
+</div>
+</div>
+
+<!-- RESPUESTA ABOGADO -->
+{% if consulta.respuesta %}
+<div class="chat-message right">
+<div class="bubble bubble-abogado">
+<strong>Abogado</strong>
+<p class="mb-0">{{ consulta.respuesta }}</p>
+</div>
+</div>
+{% else %}
+<div class="text-center text-muted mt-3">
+⏳ Aún no hay respuesta del abogado
+</div>
+{% endif %}
+
+</div>
+
+<!-- BOTÓN -->
+<div class="mt-3 text-end">
+<a href="{{ url_for('cliente.mis_consultas_cliente') }}" class="btn btn-secondary">
+Volver
+</a>
+</div>
+
+</div>
+
+{% endblock %}

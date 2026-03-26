@@ -55,15 +55,9 @@ def responder_consulta(consulta_id):
 
     if request.method == 'POST':
         respuesta = request.form['respuesta']
+
         consulta.respuesta = respuesta
-        connection = db.engine.raw_connection()
-        cursor = connection.cursor()
-
-        cursor.callproc("sp_cambiar_estado_consulta", [consulta.id, "Respondida"])
-
-        connection.commit()
-        cursor.close()
-        connection.close()
+        consulta.estado = "Respondida"
 
         db.session.commit()
 

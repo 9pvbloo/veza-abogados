@@ -144,6 +144,7 @@ def dashboard():
     # ================= ADMIN =================
     elif current_user.rol == "admin":
 
+        # ===== DATOS GENERALES =====
         connection = db.engine.raw_connection()
         cursor = connection.cursor()
 
@@ -164,20 +165,64 @@ def dashboard():
         pendientes = data[6]
         respondidas = data[7]
 
+
+        # ===== GRAFICO 1 =====
+        consultas_estado = db.session.query(
+            Consulta.estado,
+            db.func.count(Consulta.id)
+        ).group_by(Consulta.estado).all()
+
+        estado_labels = [c[0] for c in consultas_estado]
+        estado_data = [c[1] for c in consultas_estado]
+
+
+        # ===== GRAFICO 2 =====
+        consultas_area = db.session.query(
+            Consulta.area,
+            db.func.count(Consulta.id)
+        ).group_by(Consulta.area).all()
+
+        area_labels = [c[0] for c in consultas_area]
+        area_data = [c[1] for c in consultas_area]
+
+
+        # ===== GRAFICO 3 =====
+        consultas_mes = db.session.query(
+            db.func.date_format(Consulta.fecha_creacion, "%Y-%m"),
+            db.func.count(Consulta.id)
+        ).group_by(
+            db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
+        ).order_by(
+            db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
+        ).all()
+
+        mes_labels = [c[0] for c in consultas_mes]
+        mes_data = [c[1] for c in consultas_mes]
+
+
         return render_template(
             "dashboard_admin.html",
+
             total_usuarios=total_usuarios,
             total_clientes=total_clientes,
             total_abogados=total_abogados,
             total_consultas=total_consultas,
+
             activos=activos,
             inactivos=inactivos,
-            pendientes=pendientes,
-            respondidas=respondidas
-        )
 
-    else:
-        return "Rol no reconocido"
+            pendientes=pendientes,
+            respondidas=respondidas,
+
+            estado_labels=estado_labels,
+            estado_data=estado_data,
+
+            area_labels=area_labels,
+            area_data=area_data,
+
+            mes_labels=mes_labels,
+            mes_data=mes_data
+        )
 
 if __name__ == "__main__":
     with app.app_context():

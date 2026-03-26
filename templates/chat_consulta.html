@@ -1,0 +1,59 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Consulta{% endblock %}
+{% block banner_title %}Conversación{% endblock %}
+{% block banner_text %}Comunicación con tu abogado{% endblock %}
+
+{% block content %}
+
+<div class="chat-container">
+
+    <!-- HEADER -->
+    <div class="chat-header">
+        <h5 class="mb-1">{{ consulta.asunto }}</h5>
+        <small class="text-muted">
+            {% if consulta.abogado %}
+                Abogado: {{ consulta.abogado.usuario.nombre }}
+            {% else %}
+                Sin abogado asignado
+            {% endif %}
+        </small>
+    </div>
+
+    <!-- MENSAJES -->
+    <div class="chat-box" id="chatBox">
+
+        {% for msg in mensajes %}
+
+        <div class="chat-message {% if msg.usuario_id == current_user.id %}mine{% else %}other{% endif %}">
+
+            <div class="msg-content">
+                {{ msg.contenido }}
+            </div>
+
+            <div class="msg-time">
+                {{ msg.fecha.strftime('%H:%M') }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- INPUT -->
+    <form method="POST" class="chat-input">
+        <input type="text" name="mensaje" placeholder="Escribe un mensaje..." required>
+        <button type="submit">
+            <i class="bi bi-send"></i>
+        </button>
+    </form>
+
+</div>
+
+<script>
+const chatBox = document.getElementById("chatBox");
+chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+{% endblock %}

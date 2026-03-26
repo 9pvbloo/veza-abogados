@@ -9,20 +9,17 @@
 
 <div class="row justify-content-center">
 
-<div class="col-lg-8">
+<div class="col-lg-10 col-xl-12">
 
-<div class="card shadow-lg border-0">
+<!-- CARD -->
+<div class="card shadow border-0">
 
 <div class="card-body p-5">
 
 <!-- HEADER -->
-
 <div class="text-center mb-4">
 
-<h3 class="fw-bold">
-<i class="bi bi-shield-check text-primary"></i>
-Enviar Consulta Jurídica
-</h3>
+<h3 class="fw-bold">Enviar Consulta Jurídica</h3>
 
 <p class="text-muted">
 Nuestro equipo legal revisará tu caso y te responderá lo antes posible.
@@ -30,95 +27,70 @@ Nuestro equipo legal revisará tu caso y te responderá lo antes posible.
 
 </div>
 
+<hr class="my-4">
+
+<!-- FORM -->
 <form method="POST">
 
-<!-- TIPO DE CONSULTA -->
+<div class="row g-4">
 
-<div class="mb-4">
+<!-- ÁREA -->
+<div class="col-md-6">
 
-<label class="form-label fw-semibold">
-<i class="bi bi-briefcase"></i> Área Legal
-</label>
+<label class="form-label">Área Legal</label>
 
-<select class="form-select form-control-lg" name="tipo_consulta" required>
+<select class="form-select" name="area" required>
 
-<option value="">Seleccione el área legal</option>
-<option>Derecho Penal</option>
-<option>Derecho Civil</option>
-<option>Derecho Ambiental</option>
-<option>Otro</option>
+<option value="">Seleccione</option>
+
+<option value="Derecho Penal">Derecho Penal</option>
+
+<option value="Derecho Civil">Derecho Civil</option>
+
+<option value="Derecho Ambiental">Derecho Ambiental</option>
+
+<option value="Otro">Otro</option>
 
 </select>
 
 </div>
 
-
 <!-- ASUNTO -->
-
-<div class="mb-4">
-
-<label class="form-label fw-semibold">
-<i class="bi bi-pencil-square"></i> Asunto
-</label>
-
-<input
-type="text"
-class="form-control form-control-lg"
+<div class="col-md-6">
+<label class="form-label">Asunto</label>
+<input type="text" class="form-control"
 name="asunto"
-placeholder="Ejemplo: Consulta sobre contrato de alquiler"
+placeholder="Ej: Problema con contrato"
 required>
-
 </div>
-
 
 <!-- DESCRIPCIÓN -->
-
-<div class="mb-4">
-
-<label class="form-label fw-semibold">
-<i class="bi bi-chat-dots"></i> Describe tu consulta
-</label>
-
-<textarea
-class="form-control"
+<div class="col-12">
+<label class="form-label">Descripción</label>
+<textarea class="form-control"
 name="mensaje"
-rows="6"
-placeholder="Explica detalladamente tu situación legal..."
+rows="5"
+placeholder="Explica detalladamente tu situación..."
 required></textarea>
-
-<div class="form-text">
-Entre más detalles proporciones, mejor podremos ayudarte.
 </div>
-
-</div>
-
 
 <!-- DOCUMENTO -->
-
-<div class="mb-4">
-
-<label class="form-label fw-semibold">
-<i class="bi bi-paperclip"></i> Adjuntar Documento (Opcional)
-</label>
-
+<div class="col-12">
+<label class="form-label">Documento</label>
 <input type="file" class="form-control">
-
-<div class="form-text">
-Puedes adjuntar contratos, documentos o pruebas relacionadas con tu caso.
 </div>
 
 </div>
 
+<!-- BOTONES -->
+<div class="d-flex justify-content-between mt-4">
 
-<!-- BOTÓN -->
+<button type="button" class="btn btn-outline-secondary">
+Cancelar
+</button>
 
-<div class="d-grid mt-4">
-
-<button type="submit" class="btn btn-primary btn-lg shadow-sm">
-
-<i class="bi bi-send"></i>
+<button type="submit" class="btn btn-primary px-4">
 Enviar Consulta
-
 </button>
 
 </div>
@@ -126,36 +98,9 @@ Enviar Consulta
 </form>
 
 </div>
-
-</div>
-
-<!-- CONSEJOS -->
-
-<div class="card mt-4 border-0 bg-light">
-
-<div class="card-body">
-
-<h6 class="fw-bold">
-
-<i class="bi bi-info-circle text-primary"></i>
-Consejos para enviar tu consulta
-
-</h6>
-
-<ul class="mb-0">
-
-<li>Describe claramente tu situación legal.</li>
-<li>Incluye fechas o eventos importantes.</li>
-<li>Adjunta documentos si es necesario.</li>
-
-</ul>
-
 </div>
 
 </div>
-
-</div>
-
 </div>
 
 {% endblock %}
