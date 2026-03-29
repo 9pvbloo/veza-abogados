@@ -312,8 +312,9 @@ def dashboard_admin():
         db.func.count(Consulta.id)
     ).group_by(Consulta.estado).all()
 
-    estado_labels = [c[0] for c in consultas_estado]
-    estado_data = [c[1] for c in consultas_estado]
+    estado_labels = [c[0] for c in consultas_estado] if consultas_estado else ["Sin datos"]
+    estado_data = [c[1] for c in consultas_estado] if consultas_estado else [0]
+
 
     # ===== GRAFICO 2 =====
     consultas_area = db.session.query(
@@ -321,21 +322,19 @@ def dashboard_admin():
         db.func.count(Consulta.id)
     ).group_by(Consulta.area).all()
 
-    area_labels = [c[0] for c in consultas_area]
-    area_data = [c[1] for c in consultas_area]
+    area_labels = [c[0] for c in consultas_area] if consultas_area else ["Sin datos"]
+    area_data = [c[1] for c in consultas_area] if consultas_area else [0]
 
-    # ===== GRAFICO 3 =====
+
+    # ===== GRAFICO 3 (compatible con Railway) =====
     consultas_mes = db.session.query(
-        db.func.date_format(Consulta.fecha_creacion, "%Y-%m"),
+        Consulta.fecha_creacion,
         db.func.count(Consulta.id)
-    ).group_by(
-        db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
-    ).order_by(
-        db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
-    ).all()
+    ).group_by(Consulta.fecha_creacion).all()
 
-    mes_labels = [c[0] for c in consultas_mes]
-    mes_data = [c[1] for c in consultas_mes]
+    mes_labels = [str(c[0])[:7] for c in consultas_mes] if consultas_mes else ["Sin datos"]
+    mes_data = [c[1] for c in consultas_mes] if consultas_mes else [0]
+
 
     return render_template(
         "dashboard_admin.html",
