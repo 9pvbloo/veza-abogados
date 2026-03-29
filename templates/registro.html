@@ -2,76 +2,232 @@
 
 {% block content %}
 
-<div class="container">
+<style>
 
-<div class="row justify-content-center">
+.login-wrapper{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f1f5f9;
+}
 
-<div class="col-md-6">
+/* contenedor principal */
+.login-box{
+display:flex;
+width:1150px;
+min-height:650px;
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 25px 60px rgba(0,0,0,0.12);
+}
 
-<div class="section-box mt-5">
+/* lado izquierdo */
+.login-left{
+width:45%;
+background:#081125;
+color:white;
+padding:70px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
 
-<h3 class="text-center mb-4 fw-bold">Registro de Cliente</h3>
+.login-left h2{
+font-size:32px;
+font-weight:700;
+margin-bottom:20px;
+}
 
-<form method="POST" id="formRegistro">
+.login-left p{
+font-size:17px;
+line-height:1.7;
+opacity:0.95;
+}
 
-<div class="mb-3">
+.login-left::after{
+content:"";
+width:60px;
+height:5px;
+background:#facc15;
+margin-top:25px;
+border-radius:3px;
+}
 
-<label class="form-label">RUC (opcional si es empresa)</label>
+/* lado derecho */
+.login-right{
+width:55%;
+padding:70px;
+}
 
-<input type="text"
-name="ruc"
-class="form-control"
-maxlength="11"
-pattern="\d{11}">
+.login-right h3{
+font-size:30px;
+text-align:center;
+margin-bottom:5px;
+font-weight:700;
+color:#132855;
+}
 
-<small class="text-muted">
-Solo si el cliente representa una empresa
-</small>
+.login-right p{
+text-align:center;
+margin-bottom:30px;
+color:#64748b;
+}
+
+/* filas en 2 columnas */
+.form-row{
+display:flex;
+gap:15px;
+}
+
+.form-group{
+margin-bottom:20px;
+width:100%;
+}
+
+.form-control{
+height:50px;
+border-radius:10px;
+border:1px solid #d1d5db;
+padding-left:15px;
+}
+
+.form-control:focus{
+border-color:#1e3a8a;
+box-shadow:0 0 0 2px rgba(30,58,138,0.15);
+}
+
+small{
+color:#64748b;
+}
+
+.btn-register-form{
+
+width:100%;
+background:#132855;
+color:white;
+border:none;
+padding:15px;
+border-radius:10px;
+font-weight:600;
+font-size:17px;
+margin-top:10px;
+transition:0.3s;
+
+}
+
+.btn-register-form:hover{
+
+background:#2e55aa;
+
+}
+
+.login-link{
+text-align:center;
+margin-top:20px;
+}
+
+/* responsive */
+@media (max-width:1000px){
+
+.login-box{
+flex-direction:column;
+width:92%;
+}
+
+.login-left{
+width:100%;
+text-align:center;
+}
+
+.login-right{
+width:100%;
+}
+
+.form-row{
+flex-direction:column;
+}
+
+}
+
+</style>
+
+
+<div class="login-wrapper">
+
+<div class="login-box">
+
+<!-- lado izquierdo -->
+<div class="login-left">
+
+<h2>Únete a Veza Abogados</h2>
+
+<p>
+Regístrate en nuestro portal de clientes y accede a asesoría legal
+segura, comunicación directa con abogados y gestión organizada
+de tus documentos legales.
+</p>
 
 </div>
 
-<div class="mb-3">
-<label class="form-label">Correo Electrónico</label>
-<input type="email" name="email" id="email" class="form-control" required>
+
+<!-- lado derecho -->
+<div class="login-right">
+
+<h3>Crear Cuenta</h3>
+<p>Completa tus datos para registrarte</p>
+
+<form method="POST">
+
+<!-- RUC -->
+<div class="form-group">
+<label>RUC (opcional si es empresa)</label>
+<input type="text" name="ruc" class="form-control" maxlength="11" pattern="\d{11}">
+<small>Solo si el cliente representa una empresa</small>
 </div>
 
-<div class="mb-3">
-<label class="form-label">Contraseña</label>
-<input type="password" name="password" id="password" class="form-control" required minlength="6">
+<!-- EMAIL -->
+<div class="form-group">
+<label>Correo electrónico</label>
+<input type="email" name="email" class="form-control" required>
 </div>
 
-<div class="mb-3">
-<label class="form-label">DNI</label>
+<!-- PASSWORD -->
+<div class="form-group">
+<label>Contraseña</label>
+<input type="password" name="password" class="form-control" required minlength="6">
+</div>
+
+<!-- DNI -->
+<div class="form-group">
+<label>DNI</label>
 <input type="text" name="dni" class="form-control" required maxlength="8" pattern="\d{8}">
-<small class="text-muted">Debe tener 8 dígitos</small>
+<small>Debe tener 8 dígitos</small>
 </div>
 
-<div class="mb-3">
-<label class="form-label">Teléfono</label>
+<!-- TELEFONO -->
+<div class="form-group">
+<label>Teléfono</label>
 <input type="text" name="telefono" class="form-control" required pattern="\d{9}">
-<small class="text-muted">Debe tener 9 dígitos</small>
+<small>Debe tener 9 dígitos</small>
 </div>
 
-<div class="mb-3">
-<label class="form-label">Dirección</label>
+<!-- DIRECCION -->
+<div class="form-group">
+<label>Dirección</label>
 <input type="text" name="direccion" class="form-control" required>
 </div>
 
-<div class="d-grid">
-<button type="submit" class="btn btn-success">
-Registrarse
+<button type="submit" class="btn-register-form">
+Crear Cuenta
 </button>
-</div>
 
 </form>
 
-<hr>
-
-<p class="text-center mb-0">
+<div class="login-link">
 ¿Ya tienes cuenta?
-<a href="{{ url_for('auth.login') }}">Inicia sesión</a>
-</p>
-
+<a href="{{ url_for('auth.login') }}">Inicia sesión aquí</a>
 </div>
 
 </div>

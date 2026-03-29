@@ -2,39 +2,47 @@
 
 {% block content %}
 
-<div class="container">
+<div class="login-wrapper">
 
-<div class="row justify-content-center">
+<div class="login-box">
 
-<div class="col-md-5">
+<!-- LADO IZQUIERDO -->
+<div class="login-left">
 
-<div class="section-box mt-5">
+<h2>Bienvenido de vuelta</h2>
 
-<h3 class="text-center mb-4 fw-bold">Iniciar Sesión</h3>
+<p>
+Accede a tu cuenta para gestionar tus consultas legales,
+comunicarte con tu abogado y revisar tus documentos de forma segura.
+</p>
+
+</div>
+
+
+<!-- LADO DERECHO -->
+<div class="login-right">
+
+<h3>Iniciar sesión</h3>
 
 <form method="POST" id="formLogin">
 
-<div class="mb-3">
-<label class="form-label">Correo electrónico</label>
+<div class="form-group">
+<label>Correo electrónico</label>
 <input type="email" name="email" id="email" class="form-control" required>
 </div>
 
-<div class="mb-3">
-<label class="form-label">Contraseña</label>
+<div class="form-group">
+<label>Contraseña</label>
 <input type="password" name="password" id="password" class="form-control" required>
 </div>
 
-<div class="d-grid">
-<button type="submit" class="btn btn-primary">
+<button type="submit" class="btn-login-form">
 Ingresar
 </button>
-</div>
 
 </form>
 
-<hr>
-
-<p class="text-center mb-0">
+<p class="login-link">
 ¿No tienes cuenta?
 <a href="{{ url_for('auth.registro') }}">Regístrate aquí</a>
 </p>
@@ -45,6 +53,180 @@ Ingresar
 
 </div>
 
-</div>
+
+<style>
+
+.login-wrapper{
+
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f1f5f9;
+
+}
+
+/* contenedor principal */
+.login-box{
+
+display:flex;
+width:1150px;
+min-height:600px;
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 25px 60px rgba(0,0,0,0.12);
+
+}
+
+/* lado izquierdo */
+.login-left{
+
+width:45%;
+background:#081125;
+color:white;
+padding:70px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+}
+
+.login-left h2{
+
+font-size:34px;
+font-weight:700;
+margin-bottom:25px;
+
+}
+
+.login-left p{
+
+font-size:17px;
+line-height:1.7;
+opacity:0.95;
+
+}
+
+/* línea decorativa */
+.login-left::after{
+
+content:"";
+width:60px;
+height:5px;
+background:#facc15;
+margin-top:25px;
+border-radius:3px;
+
+}
+
+
+/* lado derecho */
+.login-right{
+
+width:55%;
+padding:70px;
+
+}
+
+.login-right h3{
+
+font-size:30px;
+text-align:center;
+margin-bottom:10px;
+font-weight:700;
+color:#081125;
+
+}
+
+.login-right p{
+
+text-align:center;
+margin-bottom:35px;
+color:#64748b;
+
+}
+
+.form-group{
+
+margin-bottom:22px;
+
+}
+
+.form-control{
+
+height:52px;
+border-radius:10px;
+border:1px solid #d1d5db;
+padding-left:15px;
+
+}
+
+.form-control:focus{
+
+border-color:#081125;
+box-shadow:0 0 0 2px rgba(30,58,138,0.15);
+
+}
+
+.btn-login-form{
+width:100%;
+background:#132855;
+color:white;
+border:none;
+padding:15px;
+border-radius:10px;
+font-weight:600;
+font-size:17px;
+margin-top:15px;
+transition:0.3s;
+}
+
+.btn-login-form:hover{
+background:#081125;
+}
+
+.login-link{
+
+text-align:center;
+margin-top:25px;
+font-size:15px;
+
+}
+
+.login-link a{
+
+color:#4e81f0;
+font-weight:600;
+
+}
+
+
+/* responsive */
+@media (max-width:1000px){
+
+.login-box{
+
+flex-direction:column;
+width:92%;
+
+}
+
+.login-left{
+
+width:100%;
+text-align:center;
+
+}
+
+.login-right{
+
+width:100%;
+
+}
+
+}
+
+</style>
 
 {% endblock %}
