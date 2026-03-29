@@ -145,25 +145,16 @@ def dashboard():
     elif current_user.rol == "admin":
 
         # ===== DATOS GENERALES =====
-        connection = db.engine.raw_connection()
-        cursor = connection.cursor()
+        total_usuarios = Usuario.query.count()
+        total_clientes = Cliente.query.count()
+        total_abogados = Abogado.query.count()
+        total_consultas = Consulta.query.count()
 
-        cursor.callproc("sp_dashboard_admin")
+        activos = Usuario.query.filter_by(estado=True).count()
+        inactivos = Usuario.query.filter_by(estado=False).count()
 
-        for result in cursor.stored_results():
-            data = result.fetchone()
-
-        cursor.close()
-        connection.close()
-
-        total_usuarios = data[0]
-        total_clientes = data[1]
-        total_abogados = data[2]
-        total_consultas = data[3]
-        activos = data[4]
-        inactivos = data[5]
-        pendientes = data[6]
-        respondidas = data[7]
+        pendientes = Consulta.query.filter_by(estado="Pendiente").count()
+        respondidas = Consulta.query.filter_by(estado="Respondida").count()
 
 
         # ===== GRAFICO 1 =====
@@ -172,8 +163,8 @@ def dashboard():
             db.func.count(Consulta.id)
         ).group_by(Consulta.estado).all()
 
-        estado_labels = [c[0] for c in consultas_estado]
-        estado_data = [c[1] for c in consultas_estado]
+        estado_labels = [c[0] for c in consultas_estado] if consultas_estado else ["Sin datos"]
+        estado_data = [c[1] for c in consultas_estado] if consultas_estado else [0]
 
 
         # ===== GRAFICO 2 =====
@@ -182,22 +173,18 @@ def dashboard():
             db.func.count(Consulta.id)
         ).group_by(Consulta.area).all()
 
-        area_labels = [c[0] for c in consultas_area]
-        area_data = [c[1] for c in consultas_area]
+        area_labels = [c[0] for c in consultas_area] if consultas_area else ["Sin datos"]
+        area_data = [c[1] for c in consultas_area] if consultas_area else [0]
 
 
         # ===== GRAFICO 3 =====
         consultas_mes = db.session.query(
-            db.func.date_format(Consulta.fecha_creacion, "%Y-%m"),
+            Consulta.fecha_creacion,
             db.func.count(Consulta.id)
-        ).group_by(
-            db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
-        ).order_by(
-            db.func.date_format(Consulta.fecha_creacion, "%Y-%m")
-        ).all()
+        ).group_by(Consulta.fecha_creacion).all()
 
-        mes_labels = [c[0] for c in consultas_mes]
-        mes_data = [c[1] for c in consultas_mes]
+        mes_labels = [str(c[0])[:7] for c in consultas_mes] if consultas_mes else ["Sin datos"]
+        mes_data = [c[1] for c in consultas_mes] if consultas_mes else [0]
 
 
         return render_template(
