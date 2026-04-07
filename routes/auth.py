@@ -28,10 +28,13 @@ def registro():
         direccion = request.form['direccion']
 
 
-        if not email or not password or not dni:
+        if not email or not password:
+            flash('Email y contraseña son obligatorios')
+            return redirect(url_for('auth.registro'))
 
-            flash('Todos los campos obligatorios')
-
+        # validar que al menos tenga DNI o RUC
+        if not dni and not ruc:
+            flash('Debe ingresar DNI o RUC')
             return redirect(url_for('auth.registro'))
 
 
@@ -39,18 +42,19 @@ def registro():
         # CONSULTAR RENIEC
         # =========================
 
-        datos_dni = consultar_dni(dni)
-
         nombre_completo = None
 
+        # consultar DNI solo si existe
+        if dni:
+            datos_dni = consultar_dni(dni)
 
-        if datos_dni and datos_dni.get("success") != False:
+            if datos_dni and datos_dni.get("success") != False:
 
-            nombre = datos_dni.get("nombres")
-            apellido_paterno = datos_dni.get("apellidoPaterno")
-            apellido_materno = datos_dni.get("apellidoMaterno")
+                nombre = datos_dni.get("nombres")
+                apellido_paterno = datos_dni.get("apellidoPaterno")
+                apellido_materno = datos_dni.get("apellidoMaterno")
 
-            nombre_completo = f"{nombre} {apellido_paterno} {apellido_materno}"
+                nombre_completo = f"{nombre} {apellido_paterno} {apellido_materno}"
 
 
         # =========================
