@@ -154,7 +154,7 @@ def registro():
 
 
 # LOGIN
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST']) 
 def login():
 
     if request.method == 'POST':
@@ -165,6 +165,11 @@ def login():
         usuario = Usuario.query.filter_by(email=email).first()
 
         if usuario and usuario.check_password(password):
+
+            # validar si el usuario está activo
+            if not usuario.estado:
+                flash('Su cuenta ha sido desactivada. Contacte al administrador.')
+                return redirect(url_for('auth.login'))
 
             login_user(usuario)
 
