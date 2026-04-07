@@ -118,3 +118,19 @@ class Mensaje(db.Model):
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
     usuario = db.relationship('Usuario')
+
+class Contacto(db.Model):
+
+    __tablename__ = "contactos"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    nombre = db.Column(db.String(100))
+
+    email = db.Column(db.String(120))
+
+    telefono = db.Column(db.String(20))
+
+    mensaje = db.Column(db.Text)
+
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)

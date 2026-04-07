@@ -1,0 +1,99 @@
+{% extends "base_dashboard.html" %}
+
+{% block banner_title %}
+Mensajes de contacto
+{% endblock %}
+
+{% block banner_text %}
+Solicitudes de orientación legal enviadas desde la página pública.
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+{% for c in contactos %}
+
+<div class="col-md-6 mb-4">
+
+<div class="card shadow-sm border-0 h-100">
+
+<div class="card-body">
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+
+<h5 class="fw-bold mb-0">
+
+<i class="bi bi-person-circle text-primary"></i>
+
+{{ c.nombre }}
+
+</h5>
+
+<span class="badge bg-primary">
+
+{{ c.fecha.strftime('%d/%m/%Y') }}
+
+</span>
+
+</div>
+
+<hr>
+
+<p class="mb-2">
+
+<i class="bi bi-envelope text-secondary"></i>
+
+<strong>Email:</strong>
+
+{{ c.email }}
+
+</p>
+
+{% if c.telefono %}
+
+<p class="mb-2">
+
+<i class="bi bi-telephone text-secondary"></i>
+
+<strong>Teléfono:</strong>
+
+{{ c.telefono }}
+
+</p>
+
+{% endif %}
+
+<div class="p-3 mt-3 bg-light rounded">
+
+<p class="mb-0">
+
+{{ c.mensaje }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% else %}
+
+<div class="col-12">
+
+<div class="alert alert-info">
+
+No hay mensajes de contacto aún.
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

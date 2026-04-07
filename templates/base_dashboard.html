@@ -390,6 +390,11 @@ class="{% if request.endpoint == 'admin.reporte_pdf' %}active{% endif %}">
 <i class="bi bi-file-earmark-pdf"></i> Reporte PDF
 </a>
 
+<a href="{{ url_for('admin.ver_contactos') }}"
+class="{% if request.endpoint == 'admin.ver_contactos' %}active{% endif %}">
+<i class="bi bi-envelope"></i> Mensajes de contacto
+</a>
+
 {% endif %}
 
 <!-- LOGOUT -->

@@ -23,6 +23,7 @@ from reportlab.platypus import Image
 from flask import send_file
 from datetime import datetime
 import io
+from models import Contacto
 
 admin = Blueprint('admin', __name__)
 
@@ -348,3 +349,14 @@ def dashboard_admin():
         mes_labels=mes_labels,
         mes_data=mes_data
     )
+
+@admin.route('/contactos')
+@login_required
+def ver_contactos():
+
+    if current_user.rol != "admin":
+        return redirect(url_for("dashboard"))
+
+    contactos = Contacto.query.order_by(Contacto.fecha.desc()).all()
+
+    return render_template("admin_contactos.html", contactos=contactos)

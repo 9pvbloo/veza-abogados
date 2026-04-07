@@ -5,60 +5,120 @@
 <div class="container mb-5">
 
     <div class="page-header">
-        <h1 class="fw-bold">Contáctanos</h1>
+        <h1 class="fw-bold">Solicitar orientación legal</h1>
+
         <p class="lead mb-0">
-            Estamos listos para brindarte asesoría legal profesional y confiable.
+            Si tienes una duda legal, envíanos un mensaje y nuestro equipo evaluará tu caso.
+            Nos comunicaremos contigo por correo o WhatsApp para brindarte orientación inicial.
         </p>
+
     </div>
+
 
     <div class="row mt-5 g-4">
 
         <div class="col-md-5">
+
             <div class="section-box h-100">
+
                 <h3 class="fw-bold mb-4">Información de contacto</h3>
 
-                <p><strong>Dirección:</strong> Av. Emilio Cavenencia </p>
-                <p><strong>Teléfono:</strong> +51  987 413 405</p>
+                <p><strong>Dirección:</strong> Av. Emilio Cavenencia</p>
+
+                <p><strong>Teléfono:</strong> +51 987 413 405</p>
+
                 <p><strong>Correo:</strong> estudiovezaabogados@gmail.com</p>
+
                 <p><strong>Horario:</strong> Lunes a Viernes, 8:00 am - 6:00 pm</p>
 
                 <hr>
 
                 <p class="text-muted mb-0">
-                    En Veza Abogados atendemos consultas legales con compromiso,
-                    confidencialidad y profesionalismo.
+
+                    Revisaremos tu mensaje y nos comunicaremos contigo a la brevedad.
+
                 </p>
+
             </div>
+
         </div>
 
+
         <div class="col-md-7">
+
             <div class="section-box">
-                <h3 class="fw-bold mb-4">Envíanos un mensaje</h3>
 
-                <form>
+                <h3 class="fw-bold mb-4">Enviar mensaje</h3>
+
+
+                <form method="POST">
+
                     <div class="mb-3">
+
                         <label class="form-label">Nombre completo</label>
-                        <input type="text" class="form-control" placeholder="Ingrese su nombre">
+
+                        <input
+                            type="text"
+                            name="nombre"
+                            class="form-control"
+                            placeholder="Ingrese su nombre"
+                            required>
+
                     </div>
 
+
                     <div class="mb-3">
+
                         <label class="form-label">Correo electrónico</label>
-                        <input type="email" class="form-control" placeholder="Ingrese su correo">
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Ingrese su correo"
+                            required>
+
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Asunto</label>
-                        <input type="text" class="form-control" placeholder="Ingrese el asunto">
-                    </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Teléfono (opcional)</label>
+                        <input
+                            type="text"
+                            name="telefono"
+                            class="form-control"
+                            placeholder="Ejemplo: 987654321"
+                            maxlength="9"
+                            pattern="\d{9}"
+                            inputmode="numeric">
+                        <small>Debe tener exactamente 9 dígitos</small>
+                    </div>
+
+
+                    <div class="mb-3">
+
                         <label class="form-label">Mensaje</label>
-                        <textarea class="form-control" rows="5" placeholder="Escriba su mensaje"></textarea>
+
+                        <textarea
+                            name="mensaje"
+                            class="form-control"
+                            rows="5"
+                            placeholder="Escriba brevemente su consulta"
+                            required></textarea>
+
                     </div>
 
-                    <button type="submit" class="btn btn-primary px-4">Enviar mensaje</button>
+
+                    <button type="submit" class="btn btn-primary px-4">
+
+                        Enviar mensaje
+
+                    </button>
+
                 </form>
+
             </div>
+
         </div>
 
     </div>

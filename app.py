@@ -16,6 +16,10 @@ from routes.documentos import documentos_bp
 from models import Usuario, Cliente, Abogado, Consulta, Documento, Asignacion
 from flask_login import login_required, current_user
 
+from flask import request, redirect, url_for, flash
+from models import Contacto
+from extensions import db
+
 app = Flask(__name__)
 app.config.from_object(Config)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB máximo
@@ -67,8 +71,33 @@ def home():
 def areas():
     return render_template("areas.html")
 
-@app.route("/contacto")
+@app.route("/contacto", methods=["GET", "POST"])
 def contacto():
+
+    if request.method == "POST":
+
+        nombre = request.form["nombre"]
+        email = request.form["email"]
+        telefono = request.form.get("telefono", "").strip()
+        mensaje = request.form["mensaje"]
+
+        if telefono and (not telefono.isdigit() or len(telefono) != 9):
+            flash("El teléfono debe tener exactamente 9 dígitos.")
+            return redirect(url_for("contacto"))
+
+        nuevo_contacto = Contacto(
+            nombre=nombre,
+            email=email,
+            telefono=telefono,
+            mensaje=mensaje
+        )
+
+        db.session.add(nuevo_contacto)
+        db.session.commit()
+
+        flash("Hemos recibido tu mensaje. Nos comunicaremos contigo pronto.")
+        return redirect(url_for("contacto"))
+
     return render_template("contacto.html")
 
 @app.route("/derecho-penal")
