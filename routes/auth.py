@@ -192,3 +192,138 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+# ==============================
+# API REGISTRO
+# ==============================
+
+@auth.route('/api/registro', methods=['POST'])
+def api_registro():
+    """
+    Registro de cliente
+    ---
+    tags:
+      - Autenticación
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          properties:
+            nombre:
+              type: string
+              example: Juan Perez
+            email:
+              type: string
+              example: cliente@gmail.com
+            password:
+              type: string
+              example: 123456
+            dni:
+              type: string
+              example: 12345678
+            telefono:
+              type: string
+              example: 987654321
+            direccion:
+              type: string
+              example: Av Siempre Viva 123
+    responses:
+      201:
+        description: Usuario registrado correctamente
+      400:
+        description: Error en los datos
+    """
+
+    data = request.json
+
+    if not data:
+        return {"error": "No se enviaron datos"}, 400
+
+    email = data.get("email")
+    password = data.get("password")
+    nombre = data.get("nombre")
+
+    if not email or not password:
+        return {"error": "Email y password obligatorios"}, 400
+
+    usuario_existente = Usuario.query.filter_by(email=email).first()
+
+    if usuario_existente:
+        return {"error": "Correo ya registrado"}, 400
+
+
+    nuevo_usuario = Usuario(
+        nombre=nombre,
+        email=email,
+        rol="cliente"
+    )
+
+    nuevo_usuario.set_password(password)
+
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+
+    nuevo_cliente = Cliente(
+        usuario_id=nuevo_usuario.id,
+        dni=data.get("dni"),
+        telefono=data.get("telefono"),
+        direccion=data.get("direccion")
+    )
+
+    db.session.add(nuevo_cliente)
+    db.session.commit()
+
+    return {"mensaje": "Usuario registrado correctamente"}, 201
+
+
+
+# ==============================
+# API LOGIN
+# ==============================
+
+@auth.route('/api/login', methods=['POST'])
+def api_login():
+    """
+    Login de usuario
+    ---
+    tags:
+      - Autenticación
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          properties:
+            email:
+              type: string
+              example: cliente@gmail.com
+            password:
+              type: string
+              example: 123456
+    responses:
+      200:
+        description: Login exitoso
+      401:
+        description: Credenciales incorrectas
+    """
+
+    data = request.json
+
+    if not data:
+        return {"error": "No se enviaron datos"}, 400
+
+    email = data.get("email")
+    password = data.get("password")
+
+    usuario = Usuario.query.filter_by(email=email).first()
+
+    if usuario and usuario.check_password(password):
+
+        return {
+            "mensaje": "Login correcto",
+            "usuario": usuario.email,
+            "rol": usuario.rol
+        }
+
+    return {"error": "Credenciales incorrectas"}, 401

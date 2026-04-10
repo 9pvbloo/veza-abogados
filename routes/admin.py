@@ -360,3 +360,185 @@ def ver_contactos():
     contactos = Contacto.query.order_by(Contacto.fecha.desc()).all()
 
     return render_template("admin_contactos.html", contactos=contactos)
+
+@admin.route('/api/usuarios', methods=['GET'])
+def api_listar_usuarios():
+    """
+    Obtener usuarios del sistema
+    ---
+    tags:
+      - Usuarios
+    responses:
+      200:
+        description: Lista de usuarios
+    """
+
+    usuarios = Usuario.query.all()
+
+    resultado = []
+
+    for u in usuarios:
+
+        resultado.append({
+            "id": u.id,
+            "nombre": u.nombre,
+            "email": u.email,
+            "rol": u.rol,
+            "estado": u.estado
+        })
+
+    return resultado
+
+@admin.route('/api/abogados', methods=['GET'])
+def api_listar_abogados():
+    """
+    Obtener abogados
+    ---
+    tags:
+      - Abogados
+    responses:
+      200:
+        description: Lista de abogados
+    """
+
+    abogados = Abogado.query.all()
+
+    resultado = []
+
+    for a in abogados:
+
+        resultado.append({
+            "id": a.id,
+            "usuario_id": a.usuario_id
+        })
+
+    return resultado
+
+@admin.route('/api/clientes', methods=['GET'])
+def api_listar_clientes():
+    """
+    Obtener clientes
+    ---
+    tags:
+      - Clientes
+    responses:
+      200:
+        description: Lista de clientes
+    """
+
+    clientes = Cliente.query.all()
+
+    resultado = []
+
+    for c in clientes:
+
+        resultado.append({
+            "id": c.id,
+            "usuario_id": c.usuario_id,
+            "dni": c.dni
+        })
+
+    return resultado
+
+@admin.route('/api/asignaciones', methods=['POST'])
+def api_asignar_cliente():
+    """
+    Asignar cliente a abogado
+    ---
+    tags:
+      - Asignaciones
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          properties:
+            cliente_id:
+              type: integer
+              example: 1
+            abogado_id:
+              type: integer
+              example: 2
+
+    responses:
+      201:
+        description: Cliente asignado correctamente
+      400:
+        description: Error en datos
+    """
+
+    data = request.json
+
+    if not data:
+        return {"error": "No se enviaron datos"}, 400
+
+    asignacion = Asignacion(
+
+        cliente_id=data.get("cliente_id"),
+        abogado_id=data.get("abogado_id")
+
+    )
+
+    db.session.add(asignacion)
+    db.session.commit()
+
+    return {
+        "mensaje": "Cliente asignado correctamente"
+    }, 201
+
+@admin.route('/api/asignaciones', methods=['GET'])
+def api_listar_asignaciones():
+    """
+    Obtener asignaciones cliente-abogado
+    ---
+    tags:
+      - Asignaciones
+    responses:
+      200:
+        description: Lista de asignaciones
+    """
+
+    asignaciones = Asignacion.query.all()
+
+    resultado = []
+
+    for a in asignaciones:
+
+        resultado.append({
+            "id": a.id,
+            "cliente_id": a.cliente_id,
+            "abogado_id": a.abogado_id
+        })
+
+    return resultado
+
+@admin.route('/api/asignaciones/<int:id>', methods=['DELETE'])
+def api_eliminar_asignacion(id):
+    """
+    Eliminar asignación
+    ---
+    tags:
+      - Asignaciones
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        example: 1
+    responses:
+      200:
+        description: Asignación eliminada
+      404:
+        description: No encontrada
+    """
+
+    asignacion = Asignacion.query.get(id)
+
+    if not asignacion:
+        return {"error": "Asignación no encontrada"}, 404
+
+    db.session.delete(asignacion)
+    db.session.commit()
+
+    return {"mensaje": "Asignación eliminada"}
+

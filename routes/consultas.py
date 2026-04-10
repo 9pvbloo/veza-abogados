@@ -218,3 +218,239 @@ def ver_consulta(id):
         mensajes=mensajes
 
     )
+
+@consultas.route('/api/consultas', methods=['POST'])
+def api_crear_consulta():
+    """
+    Crear consulta legal
+    ---
+    tags:
+      - Consultas
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          properties:
+            cliente_id:
+              type: integer
+              example: 1
+            asunto:
+              type: string
+              example: Incumplimiento de contrato de alquiler
+            mensaje:
+              type: string
+              example: El arrendador no quiere devolver la garantía
+            area:
+              type: string
+              example: Derecho Civil
+    responses:
+      201:
+        description: Consulta creada correctamente
+      400:
+        description: Error en los datos
+    """
+
+    data = request.json
+
+    if not data:
+        return {"error": "No se enviaron datos"}, 400
+
+    nueva_consulta = Consulta(
+        cliente_id=data.get("cliente_id"),
+        asunto=data.get("asunto"),
+        mensaje=data.get("mensaje"),
+        area=data.get("area"),
+        estado="Pendiente"
+    )
+
+    db.session.add(nueva_consulta)
+    db.session.commit()
+
+    return {
+        "mensaje": "Consulta creada correctamente",
+        "id": nueva_consulta.id
+    }, 201
+
+@consultas.route('/api/consultas', methods=['GET'])
+def api_listar_consultas():
+    """
+    Obtener todas las consultas
+    ---
+    tags:
+      - Consultas
+    responses:
+      200:
+        description: Lista de consultas
+    """
+
+    consultas = Consulta.query.all()
+
+    resultado = []
+
+    for c in consultas:
+        resultado.append({
+            "id": c.id,
+            "cliente_id": c.cliente_id,
+            "asunto": c.asunto,
+            "mensaje": c.mensaje,
+            "area": c.area,
+            "estado": c.estado
+        })
+
+    return resultado
+
+@consultas.route('/api/consultas/<int:id>', methods=['GET'])
+def api_obtener_consulta(id):
+    """
+    Obtener consulta por ID
+    ---
+    tags:
+      - Consultas
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        example: 1
+    responses:
+      200:
+        description: Consulta encontrada
+      404:
+        description: Consulta no encontrada
+    """
+
+    consulta = Consulta.query.get(id)
+
+    if not consulta:
+        return {"error": "Consulta no encontrada"}, 404
+
+    return {
+        "id": consulta.id,
+        "cliente_id": consulta.cliente_id,
+        "asunto": consulta.asunto,
+        "mensaje": consulta.mensaje,
+        "area": consulta.area,
+        "estado": consulta.estado
+    }
+
+@consultas.route('/api/consultas/cliente/<int:cliente_id>', methods=['GET'])
+def api_consultas_por_cliente(cliente_id):
+    """
+    Obtener consultas por cliente
+    ---
+    tags:
+      - Consultas
+    parameters:
+      - name: cliente_id
+        in: path
+        type: integer
+        required: true
+        example: 1
+
+    responses:
+      200:
+        description: Lista de consultas del cliente
+    """
+
+    consultas = Consulta.query.filter_by(cliente_id=cliente_id).all()
+
+    resultado = []
+
+    for c in consultas:
+
+        resultado.append({
+            "id": c.id,
+            "asunto": c.asunto,
+            "mensaje": c.mensaje,
+            "area": c.area,
+            "estado": c.estado
+        })
+
+    return resultado
+
+@consultas.route('/api/consultas/abogado/<int:abogado_id>', methods=['GET'])
+def api_consultas_por_abogado(abogado_id):
+    """
+    Obtener consultas por abogado
+    ---
+    tags:
+      - Consultas
+    parameters:
+      - name: abogado_id
+        in: path
+        type: integer
+        required: true
+        example: 1
+
+    responses:
+      200:
+        description: Lista de consultas asignadas al abogado
+    """
+
+    asignaciones = Asignacion.query.filter_by(abogado_id=abogado_id).all()
+
+    clientes_ids = [a.cliente_id for a in asignaciones]
+
+    consultas = Consulta.query.filter(
+        Consulta.cliente_id.in_(clientes_ids)
+    ).all()
+
+    resultado = []
+
+    for c in consultas:
+
+        resultado.append({
+            "id": c.id,
+            "cliente_id": c.cliente_id,
+            "asunto": c.asunto,
+            "area": c.area,
+            "estado": c.estado
+        })
+
+    return resultado
+
+@consultas.route('/api/consultas/<int:id>/estado', methods=['PUT'])
+def api_cambiar_estado_consulta(id):
+    """
+    Cambiar estado de consulta
+    ---
+    tags:
+      - Consultas
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+
+      - name: body
+        in: body
+        required: true
+        schema:
+          properties:
+            estado:
+              type: string
+              example: Respondida
+
+    responses:
+      200:
+        description: Estado actualizado
+      404:
+        description: Consulta no encontrada
+    """
+
+    consulta = Consulta.query.get(id)
+
+    if not consulta:
+        return {"error": "Consulta no encontrada"}, 404
+
+    data = request.json
+
+    consulta.estado = data.get("estado")
+
+    db.session.commit()
+
+    return {
+        "mensaje": "Estado actualizado",
+        "estado": consulta.estado
+    }

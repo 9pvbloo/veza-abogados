@@ -1,8 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
 from config import Config
 from extensions import db, login_manager
 from sqlalchemy import text
 import models
+
+# swagger
+from flasgger import Swagger
 
 # Blueprints
 from routes.auth import auth
@@ -13,26 +16,45 @@ from routes.cliente import cliente_bp
 from routes.documentos import documentos_bp
 
 # Modelos
-from models import Usuario, Cliente, Abogado, Consulta, Documento, Asignacion
+from models import Usuario, Cliente, Abogado, Consulta, Documento, Asignacion, Contacto
+
 from flask_login import login_required, current_user
 
-from flask import request, redirect, url_for, flash
-from models import Contacto
-from extensions import db
+
+# ==============================
+# CONFIGURACION APP
+# ==============================
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB máximo
 
+# activar swagger
+app.config['SWAGGER'] = {
+    'title': 'API Veza Abogados',
+    'uiversion': 3
+}
+
+Swagger(app)
+
 db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = "auth.login"
+
+
+# ==============================
+# LOGIN MANAGER
+# ==============================
 
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
-# Registrar blueprints
+
+# ==============================
+# REGISTRAR BLUEPRINTS
+# ==============================
+
 app.register_blueprint(auth)
 app.register_blueprint(consultas)
 app.register_blueprint(admin)
@@ -40,11 +62,13 @@ app.register_blueprint(abogado_bp)
 app.register_blueprint(cliente_bp)
 app.register_blueprint(documentos_bp)
 
+
+# ==============================
+# CONTADOR CONSULTAS PENDIENTES
+# ==============================
+
 @app.context_processor
 def contador_consultas_pendientes():
-
-    from flask_login import current_user
-    from models import Abogado, Consulta
 
     if current_user.is_authenticated and current_user.rol == "abogado":
 
@@ -63,13 +87,20 @@ def contador_consultas_pendientes():
 
     return dict(pendientes=pendientes)
 
+
+# ==============================
+# RUTAS PRINCIPALES
+# ==============================
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
+
 @app.route("/areas")
 def areas():
     return render_template("areas.html")
+
 
 @app.route("/contacto", methods=["GET", "POST"])
 def contacto():
@@ -100,17 +131,25 @@ def contacto():
 
     return render_template("contacto.html")
 
+
 @app.route("/derecho-penal")
 def derecho_penal():
     return render_template("derecho_penal.html")
+
 
 @app.route("/derecho-civil")
 def derecho_civil():
     return render_template("derecho_civil.html")
 
+
 @app.route("/derecho-ambiental")
 def derecho_ambiental():
     return render_template("derecho_ambiental.html")
+
+
+# ==============================
+# DASHBOARD
+# ==============================
 
 @app.route("/dashboard")
 @login_required
@@ -134,17 +173,20 @@ def dashboard():
             total_documentos=total_documentos
         )
 
+
     # ================= ABOGADO =================
     elif current_user.rol == "abogado":
 
         abogado = Abogado.query.filter_by(usuario_id=current_user.id).first()
 
-        # clientes asignados al abogado
         asignaciones = Asignacion.query.filter_by(abogado_id=abogado.id).all()
         clientes_ids = [a.cliente_id for a in asignaciones]
 
         if clientes_ids:
-            total_consultas = Consulta.query.filter(Consulta.cliente_id.in_(clientes_ids)).count()
+
+            total_consultas = Consulta.query.filter(
+                Consulta.cliente_id.in_(clientes_ids)
+            ).count()
 
             pendientes = Consulta.query.filter(
                 Consulta.cliente_id.in_(clientes_ids),
@@ -155,12 +197,18 @@ def dashboard():
                 Consulta.cliente_id.in_(clientes_ids),
                 Consulta.estado == "Respondida"
             ).count()
+
+            total_documentos = Documento.query.filter(
+                Documento.cliente_id.in_(clientes_ids)
+            ).count()
+
         else:
+
             total_consultas = 0
             pendientes = 0
             respondidas = 0
+            total_documentos = 0
 
-        total_documentos = Documento.query.filter(Documento.cliente_id.in_(clientes_ids)).count()
 
         return render_template(
             "dashboard_abogado.html",
@@ -170,10 +218,10 @@ def dashboard():
             total_documentos=total_documentos
         )
 
+
     # ================= ADMIN =================
     elif current_user.rol == "admin":
 
-        # ===== DATOS GENERALES =====
         total_usuarios = Usuario.query.count()
         total_clientes = Cliente.query.count()
         total_abogados = Abogado.query.count()
@@ -186,7 +234,7 @@ def dashboard():
         respondidas = Consulta.query.filter_by(estado="Respondida").count()
 
 
-        # ===== GRAFICO 1 =====
+        # grafico 1
         consultas_estado = db.session.query(
             Consulta.estado,
             db.func.count(Consulta.id)
@@ -196,7 +244,7 @@ def dashboard():
         estado_data = [c[1] for c in consultas_estado] if consultas_estado else [0]
 
 
-        # ===== GRAFICO 2 =====
+        # grafico 2
         consultas_area = db.session.query(
             Consulta.area,
             db.func.count(Consulta.id)
@@ -206,7 +254,7 @@ def dashboard():
         area_data = [c[1] for c in consultas_area] if consultas_area else [0]
 
 
-        # ===== GRAFICO 3 =====
+        # grafico 3
         consultas_mes = db.session.query(
             Consulta.fecha_creacion,
             db.func.count(Consulta.id)
@@ -240,7 +288,29 @@ def dashboard():
             mes_data=mes_data
         )
 
+
+# ==============================
+# PRUEBA SWAGGER
+# ==============================
+
+@app.route("/api/test")
+def test():
+    """
+    Endpoint de prueba
+    ---
+    tags:
+      - Prueba
+    responses:
+      200:
+        description: Swagger funciona correctamente
+    """
+    return {"mensaje": "Swagger activo"}
+
+
+# ==============================
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+
     app.run(debug=True)
